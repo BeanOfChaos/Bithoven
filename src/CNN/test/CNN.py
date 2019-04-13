@@ -47,10 +47,20 @@ class CNN:
         #self.addReluLayer()
         #self.addPoolingLayer()
 
-        #self.addConvLayer()
-        #self.addReluLayer()
-        #self.addPoolingLayer()
-        pass
+
+        l1_filter = np.zeros((1,2,3,3))
+        l1_filter[0, 0, :, :] = np.array([[[-1, 0, 1], 
+                                           [-1, 0, 1], 
+                                           [-1, 0, 1]]])
+        l1_filter[0, 1, :, :] = np.array([[[1,   1,  1], 
+                                           [0,   0,  0], 
+                                           [-1, -1, -1]]])
+
+        self.addConvLayer(l1_filter)
+        self.addReluLayer()
+        self.addPoolingLayer()
+
+        #pass
 
     def predict(self, inputTensor):
         """
@@ -98,6 +108,7 @@ class CNN:
             sum of the product of each element of the filter with each element of the corresponding sub matrix
             building a feature map
         """
+        print(tensor.shape, filters.shape, featureMap.shape)
         for f in range(filters.shape[0]): # for each filter
             for i in range(featureMap.shape[1]): # line i
                 for j in range(featureMap.shape[2]): # column j
@@ -105,7 +116,7 @@ class CNN:
                     featureMap[f][i][j] = np.sum(tensor[np.ix_(list(range(i, i+filters[f].shape[0])), list(range(j, j+filters[f].shape[1])))] * filters[f])
 
     @staticmethod
-    def convolveInput(tensor, param):
+    def convolve2D(tensor, param):
         """
             This is the input layer, it applies a first convolution on the input and outputs the first feature map
         """
@@ -124,13 +135,14 @@ class CNN:
             Standard convolution layer. It takes feature map produced by the previous layer and applies its convolution
             according to its own filters.
         """
-        # see convolveInput for doc on these variables' initialization
+        # see convolve2D for doc on these variables' initialization
         filters = param["filters"]
         stride = param["stride"]
         featureMap = np.zeros(tuple(list(filters.shape[:-2])+list(tensor.shape[-2:])))
         tensor = np.pad(tensor, tuple([(0,0) for _ in range(len(tensor.shape)-2)] + [(0, filters.shape[-2] - stride), (0, filters.shape[-1] - stride)]), "constant", constant_values=(0))
         # keep in mind that here, tensor is an array of feature maps produced in the previous layer
         # now, for each filter, we apply the convolution on each of the previous featuremap (one per filter of the previous layer)
+        print(tensor.shape, filters.shape, featureMap.shape)
         for i in range(tensor.shape[0]):
             CNN.convolve(tensor[i], filters[i], featureMap[i])
         # once it is done, we sum the convulutions for each of the previous layer filters
@@ -139,7 +151,7 @@ class CNN:
 
 
     def addInputLayer(self, filters, stride=1):
-        self._layers.append(Layer(CNN.convolveInput, {"stride" : stride, "filters" : filters}))
+        self._layers.append(Layer(CNN.convolve2D, {"stride" : stride, "filters" : filters}))
 
     def addConvLayer(self, filters, stride=1):
         self._layers.append(Layer(CNN.convolveFeatures, {"stride" : stride, "filters" : filters}))
@@ -153,12 +165,25 @@ class CNN:
 
 
 if __name__ == '__main__':
+    import skimage.data
+    import matplotlib
+
     cnn = CNN()
-    """test = np.array([[1.,2., 3.,4., 5.,6.],
-                     [7.,8., 9.,10, 11,12],
-                     [13,14, 15,16, 17,18],
-                     [19,20, 21,22, 23,24]])
-    res = cnn.predict(test)
-    print(test)
-    print()
-    print(res)"""
+    img = skimage.data.chelsea()
+    res = cnn.predict(img)
+
+    fig1, ax1 = matplotlib.pyplot.subplots(nrows=3, ncols=2)
+
+    ax1[0, 0].imshow(res[0, :, :]).set_cmap("gray")
+    ax1[0, 0].get_xaxis().set_ticks([])
+    ax1[0, 0].get_yaxis().set_ticks([])
+    ax1[0, 0].set_title("L1-Map1ReLUPool")
+
+    ax1[0, 1].imshow(res[1, :, :]).set_cmap("gray")
+    ax1[0, 1].get_xaxis().set_ticks([])
+    ax1[0, 1].get_yaxis().set_ticks([])
+    ax1[0, 1].set_title("L1-Map2ReLUPool")
+
+    matplotlib.pyplot.savefig("L1.png", bbox_inches="tight")
+    matplotlib.pyplot.close(fig1)
+
