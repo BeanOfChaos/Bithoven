@@ -1,5 +1,4 @@
 
-import mido
 import numpy as np
 
 
@@ -16,13 +15,16 @@ class Layer:
         Its purpose is to propose the same interface for each layer, whatever their type
     """
 
-    def __init__(self, compFct,  parameters=None):
+    def __init__(self, compFct, learnFct, parameters=None):
         self._parameters = parameters
         self._compFct = compFct
+        self._learnFct = learnFct
 
     def compute(self, tensor):
         return self._compFct(tensor, self._parameters)
 
+    def learn(self, loss):
+        return self._learnFct(loss, self._parameters)
 
 
 class CNN:
@@ -35,8 +37,6 @@ class CNN:
         self._layers = []
         self.buildNetwork()
         self._trainingSet = trainingSet
-        #self.train()
-        #TODO manage saved filters with pickle
 
     def buildNetwork(self):
         """
@@ -54,6 +54,23 @@ class CNN:
         for layer in self._layers:
             currentTensor = layer.compute(currentTensor)
         return currentTensor
+
+    @staticmethod
+    def convolve(tensor, param):
+        """
+            Convolution layer. It takes a tensor input or the feature map produced by the previous
+            layer and applies its convolution according to its own filters.
+        """
+        filters = param["filters"] # an array of filters (3 dimensional filters)
+        stride = param["stride"] # the "sliding step" of the convolution, usually 1
+        featureMap = np.zeros(tuple([filters.shape[0]]+list(tensor.shape[-2:]))) # init the resulting feature map
+        tensor = np.pad(tensor, ((0,0), (0, filters.shape[2] - stride), (0, filters.shape[3] - stride)), "constant")
+        for f in range(filters.shape[0]): # for each 3-dimensional filter
+            for i in range(featureMap.shape[1]): # line i
+                for j in range(featureMap.shape[2]): # column j
+                    # we compute the result of the dot product between the current receptive field and the current filter (3 dimensional dot product)
+                    featureMap[f][i][j] = np.tensordot(tensor[:, i:i+filters.shape[-2], j:j+filters.shape[-1]], filters[f], axes=([0,1,2],[0,1,2]))
+        return featureMap
 
     @staticmethod
     def maxPooling(tensor, param):
@@ -85,28 +102,26 @@ class CNN:
         return np.maximum(tensor, np.zeros(tensor.shape))
 
     @staticmethod
-    def convolveFeatures(tensor, param):
-        """
-            Convolution layer. It takes a tensor input or the feature map produced by the previous
-            layer and applies its convolution according to its own filters.
-        """
-        filters = param["filters"] # an array of filters (3 dimensional filters)
-        stride = param["stride"] # the "sliding step" of the convolution, usually 1
-        featureMap = np.zeros(tuple([filters.shape[0]]+list(tensor.shape[-2:]))) # init the resulting feature map
-        tensor = np.pad(tensor, ((0,0), (0, filters.shape[2] - stride), (0, filters.shape[3] - stride)), "constant")
-        for f in range(filters.shape[0]): # for each 3-dimensional filter
-            for i in range(featureMap.shape[1]): # line i
-                for j in range(featureMap.shape[2]): # column j
-                    # we compute the result of the dot product between the current receptive field and the current filter (3 dimensional dot product)
-                    featureMap[f][i][j] = np.tensordot(tensor[:, i:i+filters.shape[-2], j:j+filters.shape[-1]], filters[f], axes=([0,1,2],[0,1,2]))
-        return featureMap
+    def learnConv(loss, param):
+        pass
 
+    @staticmethod
+    def learnMaxPool(loss, param):
+        pass
+
+    @staticmethod
+    def learnRelu(loss, param):
+        pass
+
+    @staticmethod
+    def learnFullyConn(loss, param):
+        pass
 
     def addInputLayer(self, filters, stride=1):
         self._layers.append(Layer(CNN.convolve2D, {"stride" : stride, "filters" : filters}))
 
     def addConvLayer(self, filters, stride=1):
-        self._layers.append(Layer(CNN.convolveFeatures, {"stride" : stride, "filters" : filters}))
+        self._layers.append(Layer(CNN.convolve, {"stride" : stride, "filters" : filters}))
 
     def addReluLayer(self):
         self._layers.append(Layer(CNN.relu))

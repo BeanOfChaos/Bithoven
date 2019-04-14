@@ -4,6 +4,9 @@ import numpy as np
 
 CHANNEL_NUM = 5
 
+#TODO manage saved filters with pickle
+
+
 class Discriminator(CNN):
 
     def __init__(self, trainingSet = None):
