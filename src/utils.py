@@ -16,14 +16,13 @@ def dataset(name):
 
 def toTensor(multiTrack):
     multiTrack.pad_to_same()
-    res = np.zeros(tuple([len(multiTrack.tracks)] + list(multiTrack.tracks[0].pianoroll.shape)))
+    res = np.zeros(tuple(list(multiTrack.tracks[0].pianoroll.shape) + [len(multiTrack.tracks)]))
     for i, track in enumerate(multiTrack.tracks):
-        #print(track)
-        res[i] = track.pianoroll
-    return np.array(res)
+        res[:,:,i] = track.pianoroll
+    return res
 
 if __name__ == '__main__':
     for song in dataset('./lpd_cleansed/'):
         tensor = toTensor(song)
-        #print(tensor.shape)
+        print(tensor.shape)
 

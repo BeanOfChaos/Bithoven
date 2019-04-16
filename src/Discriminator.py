@@ -13,7 +13,7 @@ class Discriminator(CNN):
         super().__init__(trainingSet)
 
     def buildNetwork(self):
-        self.addConvLayer(np.random.rand(1, CHANNEL_NUM, 7, 7))
+        self.addConvLayer(np.random.rand(1, 7, 7, CHANNEL_NUM))
         self.addReluLayer()
         self.addPoolingLayer()
         #do that again
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     test = Discriminator()
     for song in dataset("./lpd_cleansed/"):
         tensor = toTensor(song)
-        if tensor.shape[0] == 5:
+        if tensor.shape[2] == 5:
             print("input tensor :", tensor.shape)
             print(test.predict(tensor).shape)
 
