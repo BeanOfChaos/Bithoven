@@ -14,13 +14,15 @@ class CNN:
     """
         This class implements a CNN, the network is built in buildNetwork (no shit).
         TODO : implement backprop and a training function
-        TODO : make classes inherited from Layer for different layers
     """
 
-    def __init__(self, trainingSet=None):
+    def __init__(self, isLearning=False, trainingSet=None):
         self._layers = []
         self.buildNetwork()
+        self._isLearning = isLearning
         self._trainingSet = trainingSet
+        if isLearning:
+            self.train()
 
     def buildNetwork(self):
         """
@@ -39,12 +41,15 @@ class CNN:
             currentTensor = layer.compute(currentTensor)
         return currentTensor
 
+    def train(self):
+        pass
+
     def addConvLayer(self, filters, stride=1):
-        self._layers.append(ConvolutionLayer(filters, stride, False))
+        self._layers.append(ConvolutionLayer(filters, stride, self._isLearning))
 
     def addReluLayer(self):
-        self._layers.append(ReluLayer(False))
+        self._layers.append(ReluLayer(self._isLearning))
 
     def addPoolingLayer(self, partitionSize=2):
-        self._layers.append(MaxPoolingLayer(partitionSize, False))
+        self._layers.append(MaxPoolingLayer(partitionSize, self._isLearning))
 

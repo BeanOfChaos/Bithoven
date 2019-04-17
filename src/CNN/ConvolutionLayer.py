@@ -4,8 +4,9 @@ from CNN.AbstractLayer import Layer
 
 class ConvolutionLayer(Layer):
 
-    def __init__(self, filters, stride=1, isLearning=True):
+    def __init__(self, filters, learningRate, stride=1, isLearning=True):
         super(ConvolutionLayer, self).__init__(isLearning)
+        self._learningRate = learningRate
         self._filters = filters
         self._stride = stride
 
@@ -27,10 +28,15 @@ class ConvolutionLayer(Layer):
         return featureMap
 
     @staticmethod
-    def learnConv(loss, receivedInput, filters):
-        # dimensions do not match, 
-        filters = filters - learningRate*loss*receivedInput
-        return previousLayerLoss, newFilters
+    def learnConv(loss, receivedInput, filters, learningRate):
+        previousLayerLoss = np.zeros(receivedInput.shape)
+        filtersCorrection = np.zeros(filters.shape)
+        for i in range(filters.shape[0]):
+            for j in range(filters.shape[1]):
+                for k in range(filters.shape[2]):
+                    previousLayerLoss[j:j+filters.shape[1], k:k+filters.shape[2], :] += loss[j,k,i] * filters[i]
+                    filtersCorrection[i] += loss[j,k,i] * receivedInput[j:j+filters.shape[1], k:k+filters.shape[2], :]
+        return previousLayerLoss, filters - learningRate * filtersCorrection
 
     def compute(self, tensor):
         self.saveData(tensor)
@@ -38,6 +44,6 @@ class ConvolutionLayer(Layer):
 
     def learn(self, loss):
         if self.isLearning():
-            res, self._filters = ConvolutionLayer.learnConv(loss, self.getSavedData(), self._filters)
+            res, self._filters = ConvolutionLayer.learnConv(loss, self.getSavedData(), self._filters, self._learningRate)
             return res
 
