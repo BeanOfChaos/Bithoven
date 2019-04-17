@@ -47,4 +47,7 @@ class CNN:
 
     def addPoolingLayer(self, partitionSize=2):
         self._layers.append(MaxPoolingLayer(partitionSize, False))
+	
+	def addFullyConnectedLayer(self, filters):
+		self._layers.append(FullyConnectedLayer(filters))
 
