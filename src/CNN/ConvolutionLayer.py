@@ -29,20 +29,32 @@ class ConvolutionLayer(Layer):
 
     @staticmethod
     def learnConv(loss, receivedInput, filters, learningRate):
-        previousLayerLoss = np.zeros(receivedInput.shape)
-        filtersCorrection = np.zeros(filters.shape)
-        for i in range(filters.shape[0]):
-            for j in range(filters.shape[1]):
-                for k in range(filters.shape[2]):
+        """
+            Function computing the loss of the previous layer and the updated filters.
+            The received loss is computed in the next layer and sent here through backprop.
+        """
+        previousLayerLoss = np.zeros(receivedInput.shape) # contains the loss of the previous layer
+        filtersCorrection = np.zeros(filters.shape) # will be used to compute the updated filters
+        for i in range(filters.shape[0]): # for each filter
+            for j in range(filters.shape[1]): # for i along the height
+                for k in range(filters.shape[2]): # for j along the width
+                    # computing dL/dinput and dL/dW
                     previousLayerLoss[j:j+filters.shape[1], k:k+filters.shape[2], :] += loss[j,k,i] * filters[i]
                     filtersCorrection[i] += loss[j,k,i] * receivedInput[j:j+filters.shape[1], k:k+filters.shape[2], :]
+        # returns the previous layer's loss and the updated filters 
         return previousLayerLoss, filters - learningRate * filtersCorrection
 
     def compute(self, tensor):
+        """
+            Wraps the computation static method
+        """
         self.saveData(tensor)
         return ConvolutionLayer.convolve(tensor, self._filters, self._stride)
 
     def learn(self, loss):
+        """
+            Wraps the learning static method and update the filters
+        """
         if self.isLearning():
             res, self._filters = ConvolutionLayer.learnConv(loss, self.getSavedData(), self._filters, self._learningRate)
             return res
