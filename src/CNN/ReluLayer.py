@@ -10,7 +10,12 @@ class ReluLayer(Layer):
 
     @staticmethod
     def learnRelu(loss, receivedInput):
-        pass
+        """
+            the derivative of Relu is 1 where x>0, 0 elsewhere
+            the loss of the previous layer is the derivative of Relu multiplied by the loss of this layer
+        """
+        previousLayerLoss = np.where(receivedInput>0, 1, 0)
+        return loss * previousLayerLoss
 
     def compute(self, tensor):
         # relu is a simple function keeping positive values in a tensor and changing the negative ones to zero

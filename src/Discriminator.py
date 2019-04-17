@@ -9,11 +9,11 @@ CHANNEL_NUM = 5
 
 class Discriminator(CNN):
 
-    def __init__(self, trainingSet = None):
-        super().__init__(trainingSet)
+    def __init__(self, isTraining=False, trainingSet=None):
+        super(Discriminator, self).__init__(isTraining, trainingSet)
 
     def buildNetwork(self):
-        self.addConvLayer(np.random.rand(1, 7, 7, CHANNEL_NUM))
+        self.addConvLayer(np.random.rand(1, 7, 7, CHANNEL_NUM), 0.1)
         self.addReluLayer()
         self.addPoolingLayer()
         #do that again
