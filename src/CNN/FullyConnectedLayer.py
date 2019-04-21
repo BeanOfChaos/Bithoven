@@ -22,7 +22,6 @@ class FullyConnectedLayer(Layer):
 		valuesSum = 0
 		for val in lst : 
 			valuesSum += exp(val)
-		print(valuesSum)
 		results = []
 		for val in lst:
 			results.append(FullyConnectedLayer.softMax(val, valuesSum))
@@ -37,7 +36,35 @@ class FullyConnectedLayer(Layer):
 		result is a   1 x 2 array for the two nodes of the fully connected layer, on which SoftMax is applied
 		"""
 		nodes = np.dot(vector, filter)
-		print(nodes)
 		results = FullyConnectedLayer.listSoftMax(nodes)
 		return results
 		
+
+	def calculateCrossEntropy(prediction, actual):
+		return actual * math.log(prediction)
+	
+	def calculateCrossEntropyVector(predicted, actuals):
+		res = [FullyConnectedLayer.calculateCrossEntropy(predicted[i], actuals[i]) for i in range(len(predicted))]
+		return -(np.sum(res))
+		
+	
+		
+	@staticmethod
+	def learnConv(loss, previousLayer, receivedInput, filter, learningRate):
+		"""
+		Function computing the loss of the previous layer and the updated filter.
+		There is only one filter
+		"""
+		previousLayerLoss = np.zeros(receivedInput.shape) # contains the loss of the previous layer
+        filtersCorrection = np.zeros(filter.shape) # will be used to compute the updated filters
+		
+		for i in range(filter.shape[0]):  #for i along the height
+			for j in range(filter.shape[1]):  #for j along the width
+				filtersCorrection[i][j] = loss[j] * 
+				(previousLayer[i]*math.exp(receivedInput[0])*math.exp(receivedInput[1]))/(math.exp(receivedInput[0])+math.exp(receivedInput[1]))**2 
+				#derivation of softmax formula with cross entropy. dE/dW
+				
+				#TODO !!!! Previous layer loss
+		
+		filter = filter - learningRate*filtersCorrection
+		return filter
