@@ -11,7 +11,8 @@ if __name__ == "__main__":
 
     cats = os.listdir('dataset/Cat')
     dogs = os.listdir('dataset/Dog')
-    dataset = [(1, catpic) for catpic in cats] + [(0, dogpic) for dogpic in dogs]
+    dataset = [(1, 'dataset/Cat/' + catpic) for catpic in cats] \
+        + [(0, 'dataset/Dog/' + dogpic) for dogpic in dogs]
     shuffle(dataset)
     x = len(dataset // 5)
     training_set, validation_set = dataset[x:], dataset[:x]
