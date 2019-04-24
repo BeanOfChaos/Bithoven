@@ -50,10 +50,9 @@ class FullyConnectedLayer(Layer):
 
 		for i in range(filter.shape[0]):  #for i along the height
 			filtersCorrection[i] = loss * (previousLayer[i] * exp(receivedInput))/pow((exp(receivedInput)+1), 2) 
-			filter = filter - learningRate*filtersCorrection
-			
 			previousLayerLoss[i] = loss * (filter[i] * exp(receivedInput))/pow((exp(receivedInput)+1),2)
 		
+			filter = filter - learningRate*filtersCorrection
 		
 		return previousLayerLoss, filter
 
