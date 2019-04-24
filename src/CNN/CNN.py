@@ -52,7 +52,10 @@ class CNN:
         raise NotImplementedError
 
     def addConvLayer(self, filters, learningRate, stride=1):
-        self._layers.append(ConvolutionLayer(filters, learningRate, stride, self._isLearning))
+        self._layers.append(ConvolutionLayer(filters,
+                                             learningRate,
+                                             stride,
+                                             self._isLearning))
 
     def addReluLayer(self):
         self._layers.append(ReluLayer(self._isLearning))
