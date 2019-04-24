@@ -1,4 +1,4 @@
-from math import exp
+from math import exp, pow
 import numpy as np
 from AbstractLayer import Layer
 
@@ -9,62 +9,52 @@ class FullyConnectedLayer(Layer):
 		self._filters = filters
 		self._stride = stride
 	
-	def softMax(value, valuesSum):
+	def sigmoid(value):
 		"""
-		Basic SoftMax calculation
+		Basic Sigmoid calculation
 		"""
-		return exp(value)/valuesSum
+		return exp(value)/(exp(value) + 1)
 	
-	def listSoftMax(lst):
-		"""
-		Calculate SoftMax for a list of values
-		"""
-		valuesSum = 0
-		for val in lst : 
-			valuesSum += exp(val)
-		results = []
-		for val in lst:
-			results.append(FullyConnectedLayer.softMax(val, valuesSum))
-		return results
 		
 	@staticmethod
-	def connect(vector, filter):
+	def connect(tensor, filter):
 		"""
 		Does the dot product between the input vector and the filter.
 		Vector is a   1 x n array
-		Filter is a   n x 2 array
-		result is a   1 x 2 array for the two nodes of the fully connected layer, on which SoftMax is applied
+		Filter is a   n x 1 array
+		result is a   1 x 1 array for the two nodes of the fully connected layer, on which SoftMax is applied
 		"""
-		nodes = np.dot(vector, filter)
-		results = FullyConnectedLayer.listSoftMax(nodes)
-		return results
+		vector = np.reshape(tensor, -1)
+		node = np.dot(vector, filter)
+		result = FullyConnectedLayer.sigmoid(node)
+		return result
 		
 
-	def calculateCrossEntropy(prediction, actual):
-		return actual * math.log(prediction)
-	
-	def calculateCrossEntropyVector(predicted, actuals):
-		res = [FullyConnectedLayer.calculateCrossEntropy(predicted[i], actuals[i]) for i in range(len(predicted))]
-		return -(np.sum(res))
+	def calculateLeastSquares(prediction, actual):
+		return 1/2 * pow(prediction-actual, 2)
 		
-	
 		
 	@staticmethod
-	def learnConv(loss, previousLayer, receivedInput, filter, learningRate):
+	def learnFullyConnected(previousLayer, receivedInput, filter, learningRate, prediction, actual):
 		"""
 		Function computing the loss of the previous layer and the updated filter.
 		There is only one filter
+		Previous Layer : the simple values of the previous layer's nodes
+		Received input : sum (xi * wi)
 		"""
+		
+		loss = calculateLeastSquaresVector(prediction, actual)
+		
 		previousLayerLoss = np.zeros(receivedInput.shape) # contains the loss of the previous layer
-        filtersCorrection = np.zeros(filter.shape) # will be used to compute the updated filters
-		
+		filtersCorrection = np.zeros(filter.shape) # will be used to compute the updated filters
+
 		for i in range(filter.shape[0]):  #for i along the height
-			for j in range(filter.shape[1]):  #for j along the width
-				filtersCorrection[i][j] = loss[j] * 
-				(previousLayer[i]*math.exp(receivedInput[0])*math.exp(receivedInput[1]))/(math.exp(receivedInput[0])+math.exp(receivedInput[1]))**2 
-				#derivation of softmax formula with cross entropy. dE/dW
-				
-				#TODO !!!! Previous layer loss
+			filtersCorrection[i] = loss * (previousLayer[i] * exp(receivedInput))/pow((exp(receivedInput)+1), 2) 
+			filter = filter - learningRate*filtersCorrection
+			
+			previousLayerLoss[i] = loss * (filter[i] * exp(receivedInput))/pow((exp(receivedInput)+1),2)
 		
-		filter = filter - learningRate*filtersCorrection
-		return filter
+		
+		return previousLayerLoss, filter
+
+
