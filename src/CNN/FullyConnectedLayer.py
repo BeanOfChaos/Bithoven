@@ -17,13 +17,14 @@ class FullyConnectedLayer(Layer):
 	
 		
 	@staticmethod
-	def connect(vector, filter):
+	def connect(tensor, filter):
 		"""
 		Does the dot product between the input vector and the filter.
 		Vector is a   1 x n array
 		Filter is a   n x 1 array
 		result is a   1 x 1 array for the two nodes of the fully connected layer, on which SoftMax is applied
 		"""
+		vector = np.reshape(tensor, -1)
 		node = np.dot(vector, filter)
 		result = FullyConnectedLayer.sigmoid(node)
 		return result
@@ -34,7 +35,7 @@ class FullyConnectedLayer(Layer):
 		
 		
 	@staticmethod
-	def learnConv(previousLayer, receivedInput, filter, learningRate, prediction, actual):
+	def learnFullyConnected(previousLayer, receivedInput, filter, learningRate, prediction, actual):
 		"""
 		Function computing the loss of the previous layer and the updated filter.
 		There is only one filter
