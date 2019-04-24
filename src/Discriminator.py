@@ -8,13 +8,19 @@ CHANNEL_NUM = 5
 
 class Discriminator(CNN):
 
-    def __init__(self, isTraining=False, trainingSet=None, filename=None):
+    def __init__(self, isTraining=False, trainingSet=None):
         super(Discriminator, self).__init__(isTraining, trainingSet)
 
     def buildNetwork(self):
-        self.addConvLayer(np.random.rand(1, 7, 7, CHANNEL_NUM), 0.1)
+        self.addConvLayer(np.random.rand(8, 7, 7, CHANNEL_NUM), 0.01)
+        self.addReluLayer()
+        self.addConvLayer(np.random.rand(4, 7, 7, CHANNEL_NUM), 0.01)
         self.addReluLayer()
         self.addPoolingLayer()
+        self.addConvLayer(np.random.rand(2, 7, 7, CHANNEL_NUM), 0.01)
+        self.addReluLayer()
+        self.addPoolingLayer()
+        self.addFullyconnectedLayer(np.random.rand(98), 0.01)
         # do that again
 
         # self.addFullyconnectedLayer(classes = 2) # is / isn't generated music
