@@ -11,6 +11,7 @@ class FullyConnectedLayer(Layer):
         self._learningRate = learningRate
         self._predicted = 0
         self._actual = 0
+        self._isLearning = isLearning
     
     def sigmoid(value):
         """
@@ -20,17 +21,15 @@ class FullyConnectedLayer(Layer):
     
         
     @staticmethod
-    def connect(tensor, weights):
+    def connect(vector, weights):
         """
         Does the dot product between the input vector and the filter.
         Vector is a   1 x n array
         Filter is a   n x 1 array
         result is a   1 x 1 array for the two nodes of the fully connected layer, on which SoftMax is applied
         """
-        vector = np.reshape(tensor, -1)
         node = np.dot(vector, weights)
         result = FullyConnectedLayer.sigmoid(node)
-        self.saveData(vector, result)
         return result
         
 
@@ -62,14 +61,18 @@ class FullyConnectedLayer(Layer):
         """
 		basic computation function, calls the main function
         """
-        return FullyConnectedLayer.connect(tensor, self._weights)
+        vector = np.reshape(tensor, -1)
+        res = FullyConnectedLayer.connect(vector, self._weights)
+        self.saveData((vector, res))
+        return res
 
     def learn(self, loss):
         """
         basic learning method, sets some parameters and calls the main function
         """
-        previousLayer, alpha = self.getData()
+        (previousLayer, alpha) = self.getData()
         loss = self.calculateLeastSquaresVector(self._prediction, self._actual)
         previousLayerLoss, waights = FullyConnectedLayer.learnFullyConnected(loss, previousLayer, alpha, self._weights, self._learningRate)
 
         return previousLayerLoss
+
