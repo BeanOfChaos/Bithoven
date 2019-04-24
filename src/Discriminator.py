@@ -15,9 +15,9 @@ class Discriminator(CNN):
         self.addConvLayer(np.random.rand(1, 7, 7, CHANNEL_NUM), 0.1)
         self.addReluLayer()
         self.addPoolingLayer()
-        #do that again
+        # do that again
 
-        #self.addFullyconnectedLayer(classes = 2) # is generated music / or not
+        # self.addFullyconnectedLayer(classes = 2) # is / isn't generated music
 
     def dump_model(self, filename):
         """Dumps the model to filename.
