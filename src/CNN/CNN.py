@@ -39,6 +39,7 @@ class CNN:
         """
         currentTensor = inputTensor
         for layer in self._layers:
+            print(currentTensor.shape)
             currentTensor = layer.compute(currentTensor)
         if self._isLearning:
             self._output = currentTensor
