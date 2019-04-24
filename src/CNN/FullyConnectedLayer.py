@@ -9,7 +9,7 @@ class FullyConnectedLayer(Layer):
         self._weights = weights
         self._learningRate = learningRate
 
-    
+    @staticmethod
     def sigmoid(value):
         """
         Basic Sigmoid calculation
