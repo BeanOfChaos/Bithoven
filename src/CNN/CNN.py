@@ -27,15 +27,17 @@ class CNN:
 
     def buildNetwork(self):
         """
-            Here is built the network, the layers are stacked, the first one being the input layer,
-            the last one being the output layer. The ouput of a layer is the input of the next
+            Here is built the network, the layers are stacked.
+            First one being the input layer.
+            Last one being the output layer.
+            The ouput of a layer should be the input of the next.
         """
         raise NotImplementedError
 
     def predict(self, inputTensor):
         """
-            Main "predicting" method of the CNN, based on what is learned and the architecture of
-            the network, it outputs a result
+            Main "predicting" method of the CNN, based on the learned model,
+            it outputs a result (I swear).
         """
         currentTensor = inputTensor
         for layer in self._layers:
@@ -45,7 +47,7 @@ class CNN:
     def train(self):
         """
             Main training Function, it computes the loss of the output layer and
-            uses back prop to update the parameters (filters, weights) of the network
+            uses back prop to update the parameters (filters, weights) of the network.
         """
         raise NotImplementedError
 
