@@ -1,6 +1,6 @@
 # Bithoven
 
-Bithoven: GAN for music generation
+Bithoven: GAN for music generation (Rip In Peperonni)
 
 
 ## Download dataset
