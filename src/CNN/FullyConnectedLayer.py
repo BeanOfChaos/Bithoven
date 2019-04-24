@@ -15,14 +15,6 @@ class FullyConnectedLayer(Layer):
 		"""
 		return exp(value)/(exp(value) + 1)
 	
-	def listSigmoid(lst):
-		"""
-		Calculate SoftMax for a list of values
-		"""
-		results = []
-		for val in lst:
-			results.append(FullyConnectedLayer.sigmoid(val))
-		return results
 		
 	@staticmethod
 	def connect(vector, filter):
