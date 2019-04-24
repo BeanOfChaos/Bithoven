@@ -30,7 +30,7 @@ class CNN:
             Here is built the network, the layers are stacked, the first one being the input layer,
             the last one being the output layer. The ouput of a layer is the input of the next
         """
-        pass
+        raise NotImplementedError
 
     def predict(self, inputTensor):
         """
@@ -47,7 +47,7 @@ class CNN:
             Main training Function, it computes the loss of the output layer and
             uses back prop to update the parameters (filters, weights) of the network
         """
-        pass
+        raise NotImplementedError
 
     def addConvLayer(self, filters, learningRate, stride=1):
         self._layers.append(ConvolutionLayer(filters, learningRate, stride, self._isLearning))

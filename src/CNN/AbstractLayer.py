@@ -22,7 +22,7 @@ class Layer:
         return self._savedData
 
     def compute(self, tensor):
-        pass
+        raise NotImplementedError
 
     def learn(self, loss):
-        pass
+        raise NotImplementedError
