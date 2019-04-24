@@ -7,11 +7,8 @@ class FullyConnectedLayer(Layer):
     def __init__(self, weights, learningRate, stride=1, isLearning=True):
         super(FullyConnectedLayer, self).__init__(isLearning)
         self._weights = weights
-        self._stride = stride
         self._learningRate = learningRate
-        self._predicted = 0
-        self._actual = 0
-        self._isLearning = isLearning
+
     
     def sigmoid(value):
         """
@@ -71,7 +68,6 @@ class FullyConnectedLayer(Layer):
         basic learning method, sets some parameters and calls the main function
         """
         (previousLayer, alpha) = self.getData()
-        loss = self.calculateLeastSquaresVector(self._prediction, self._actual)
         previousLayerLoss, waights = FullyConnectedLayer.learnFullyConnected(loss, previousLayer, alpha, self._weights, self._learningRate)
 
         return previousLayerLoss
