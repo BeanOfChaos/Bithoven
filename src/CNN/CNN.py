@@ -1,18 +1,19 @@
-import numpy as np
 from CNN.ConvolutionLayer import ConvolutionLayer
 from CNN.ReluLayer import ReluLayer
 from CNN.MaxPoolingLayer import MaxPoolingLayer
+from CNN.FullyConnectedLayer import FullyConnectedLayer
+
 
 """
     Input format :
-       3-tensor where a_{ijk} is I don't know what (a float value) for the k'th track,
-       the i'th time step and the j'th pitch
+       3-tensor where a_{ijk} is I don't know what (a float value) for the k'th
+       track, the i'th time step and the j'th pitch
 """
 
 
 class CNN:
     """
-        This class implements a CNN, the network is built in buildNetwork (no shit).
+        This class implements a CNN, the network is built in buildNetwork.
         TODO : implement backprop and a training function
     """
 
@@ -59,4 +60,3 @@ class CNN:
 
     def addFullyConnectedLayer(self, filters):
         self._layers.append(FullyConnectedLayer(filters))
-
