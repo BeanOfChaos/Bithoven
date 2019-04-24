@@ -22,8 +22,6 @@ class CNN:
         self._isLearning = isLearning
         self._output = None
         self.buildNetwork()
-        if isLearning:
-            self.train()
 
     def buildNetwork(self):
         """
@@ -67,5 +65,5 @@ class CNN:
     def addPoolingLayer(self, partitionSize=2):
         self._layers.append(MaxPoolingLayer(partitionSize, self._isLearning))
 
-    def addFullyConnectedLayer(self, filters):
-        self._layers.append(FullyConnectedLayer(filters))
+    def addFullyConnectedLayer(self, filters, learningRate):
+        self._layers.append(FullyConnectedLayer(filters, learningRate))

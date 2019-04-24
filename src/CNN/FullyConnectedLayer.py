@@ -1,6 +1,6 @@
 from math import exp, pow
 import numpy as np
-from AbstractLayer import Layer
+from CNN.AbstractLayer import Layer
 
 class FullyConnectedLayer(Layer):
     

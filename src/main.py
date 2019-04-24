@@ -1,20 +1,19 @@
 import os
 from random import shuffle
-from Pillow import Image
+from PIL import Image
 import numpy as np
 
-from src import Discriminator
+from Discriminator import Discriminator
 
 
 if __name__ == "__main__":
     discr = Discriminator()
 
-    cats = os.listdir('dataset/Cat')
-    dogs = os.listdir('dataset/Dog')
-    dataset = [(1, 'dataset/Cat/' + catpic) for catpic in cats] \
-        + [(0, 'dataset/Dog/' + dogpic) for dogpic in dogs]
+    cats = os.listdir('../dataset/Cat')
+    dogs = os.listdir('../dataset/Dog')
+    dataset = [(1, catpic) for catpic in cats] + [(0, dogpic) for dogpic in dogs]
     shuffle(dataset)
-    x = len(dataset // 5)
+    x = len(dataset) // 5
     training_set, validation_set = dataset[x:], dataset[:x]
 
     for type, filename in training_set:
