@@ -8,7 +8,7 @@ CHANNEL_NUM = 5
 
 class Discriminator(CNN):
 
-    def __init__(self, isTraining=False, trainingSet=None):
+    def __init__(self, isTraining=True):
         super(Discriminator, self).__init__(isTraining, trainingSet)
 
     def buildNetwork(self):

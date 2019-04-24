@@ -17,10 +17,9 @@ class CNN:
         TODO : implement backprop and a training function
     """
 
-    def __init__(self, isLearning=False, trainingSet=None):
+    def __init__(self, isLearning=False):
         self._layers = []
         self._isLearning = isLearning
-        self._trainingSet = trainingSet
         self._output = None
         self.buildNetwork()
         if isLearning:
