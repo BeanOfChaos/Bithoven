@@ -13,18 +13,28 @@ class ConvolutionLayer(Layer):
     @staticmethod
     def convolve(tensor, filters, stride):
         """
-            Convolution layer. It takes a tensor input or the feature map produced by the previous
+            Convolution layer.
+            It takes a tensor input or the feature map produced by the previous
             layer and applies its convolution according to its own filters.
             stride : the "sliding step" of the convolution, usually 1
             filters : an array of filters (3 dimensional filters)
         """
-        featureMap = np.zeros(tuple(list(tensor.shape[:2])+[filters.shape[0]])) # init the resulting feature map
-        tensor = np.pad(tensor, ((0, filters.shape[1] - stride), (0, filters.shape[2] - stride), (0,0)), "constant")
-        for f in range(filters.shape[0]): # for each 3-dimensional filter
-            for i in range(featureMap.shape[0]): # line i
-                for j in range(featureMap.shape[2]): # column j
-                    # we compute the result of the dot product between the current receptive field and the current filter (3 dimensional dot product)
-                    featureMap[i][j][f] = np.tensordot(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :], filters[f], axes=([0,1,2],[0,1,2]))
+        # init the resulting feature map
+        featureMap = np.zeros(tuple(list(tensor.shape[:2])+[filters.shape[0]]))
+
+        tensor = np.pad(tensor, ((0, filters.shape[1] - stride),
+                        (0, filters.shape[2] - stride), (0, 0)), "constant")
+        for f in range(filters.shape[0]):  # for each 3-dimensional filter
+            for i in range(featureMap.shape[0]):  # line i
+                for j in range(featureMap.shape[2]):  # column j
+                    # we compute the result of the dot product between:
+                    # (1) the current receptive field
+                    # and (2) the current filter (3 dimensional dot product)
+                    featureMap[i][j][f] \
+                            = np.tensordot(tensor[i:i+filters.shape[1],
+                                           j:j+filters.shape[2], :],
+                                           filters[f],
+                                           axes=([0, 1, 2], [0, 1, 2]))
         return featureMap
 
     @staticmethod
@@ -33,15 +43,22 @@ class ConvolutionLayer(Layer):
             Function computing the loss of the previous layer and the updated filters.
             The received loss is computed in the next layer and sent here through backprop.
         """
-        previousLayerLoss = np.zeros(receivedInput.shape) # contains the loss of the previous layer
-        filtersCorrection = np.zeros(filters.shape) # will be used to compute the updated filters
-        for i in range(filters.shape[0]): # for each filter
-            for j in range(filters.shape[1]): # for i along the height
-                for k in range(filters.shape[2]): # for j along the width
+        # contains the loss of the previous layer
+        previousLayerLoss = np.zeros(receivedInput.shape)
+        # will be used to compute the updated filters
+        filtersCorrection = np.zeros(filters.shape)
+        for i in range(filters.shape[0]):  # for each filter
+            for j in range(filters.shape[1]):  # for i along the height
+                for k in range(filters.shape[2]):  # for j along the width
                     # computing dL/dinput and dL/dW
-                    previousLayerLoss[j:j+filters.shape[1], k:k+filters.shape[2], :] += loss[j,k,i] * filters[i]
-                    filtersCorrection[i] += loss[j,k,i] * receivedInput[j:j+filters.shape[1], k:k+filters.shape[2], :]
-        # returns the previous layer's loss and the updated filters 
+                    previousLayerLoss[j:j+filters.shape[1],
+                                      k:k+filters.shape[2], :] \
+                                        += loss[j, k, i] * filters[i]
+                    filtersCorrection[i] += loss[j, k, i] \
+                        * receivedInput[j:j+filters.shape[1],
+                                        k:k+filters.shape[2],
+                                        :]
+        # returns the previous layer's loss and the updated filters
         return previousLayerLoss, filters - learningRate * filtersCorrection
 
     def compute(self, tensor):
@@ -56,6 +73,8 @@ class ConvolutionLayer(Layer):
             Wraps the learning static method and update the filters
         """
         if self.isLearning():
-            res, self._filters = ConvolutionLayer.learnConv(loss, self.getSavedData(), self._filters, self._learningRate)
+            res, self._filters = ConvolutionLayer.learnConv(loss,
+                                                            self.getSavedData(),
+                                                            self._filters,
+                                                            self._learningRate)
             return res
-

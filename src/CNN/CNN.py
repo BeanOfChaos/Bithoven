@@ -1,18 +1,19 @@
-import numpy as np
 from CNN.ConvolutionLayer import ConvolutionLayer
 from CNN.ReluLayer import ReluLayer
 from CNN.MaxPoolingLayer import MaxPoolingLayer
+from CNN.FullyConnectedLayer import FullyConnectedLayer
+
 
 """
     Input format :
-       3-tensor where a_{ijk} is I don't know what (a float value) for the k'th track,
-       the i'th time step and the j'th pitch
+       3-tensor where a_{ijk} is I don't know what (a float value) for the k'th
+       track, the i'th time step and the j'th pitch
 """
 
 
 class CNN:
     """
-        This class implements a CNN, the network is built in buildNetwork (no shit).
+        This class implements a CNN, the network is built in buildNetwork.
         TODO : implement backprop and a training function
     """
 
@@ -26,15 +27,17 @@ class CNN:
 
     def buildNetwork(self):
         """
-            Here is built the network, the layers are stacked, the first one being the input layer,
-            the last one being the output layer. The ouput of a layer is the input of the next
+            Here is built the network, the layers are stacked.
+            First one being the input layer.
+            Last one being the output layer.
+            The ouput of a layer should be the input of the next.
         """
-        pass
+        raise NotImplementedError
 
     def predict(self, inputTensor):
         """
-            Main "predicting" method of the CNN, based on what is learned and the architecture of
-            the network, it outputs a result
+            Main "predicting" method of the CNN, based on the learned model,
+            it outputs a result (I swear).
         """
         currentTensor = inputTensor
         for layer in self._layers:
@@ -44,12 +47,15 @@ class CNN:
     def train(self):
         """
             Main training Function, it computes the loss of the output layer and
-            uses back prop to update the parameters (filters, weights) of the network
+            uses back prop to update the parameters (filters, weights) of the network.
         """
-        pass
+        raise NotImplementedError
 
     def addConvLayer(self, filters, learningRate, stride=1):
-        self._layers.append(ConvolutionLayer(filters, learningRate, stride, self._isLearning))
+        self._layers.append(ConvolutionLayer(filters,
+                                             learningRate,
+                                             stride,
+                                             self._isLearning))
 
     def addReluLayer(self):
         self._layers.append(ReluLayer(self._isLearning))
@@ -59,4 +65,3 @@ class CNN:
 
     def addFullyConnectedLayer(self, filters):
         self._layers.append(FullyConnectedLayer(filters))
-
