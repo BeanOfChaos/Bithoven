@@ -5,8 +5,6 @@ import numpy as np
 
 from src import Discriminator
 
-EPOCHS = 1000
-
 
 if __name__ == "__main__":
     discr = Discriminator()
