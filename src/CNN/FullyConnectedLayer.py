@@ -25,7 +25,7 @@ class FullyConnectedLayer(Layer):
 		result is a   1 x 1 array for the two nodes of the fully connected layer, on which SoftMax is applied
 		"""
 		node = np.dot(vector, filter)
-		result = FullyConnectedLayer.sigmoid(node[0])
+		result = FullyConnectedLayer.sigmoid(node)
 		return result
 		
 
@@ -45,8 +45,8 @@ class FullyConnectedLayer(Layer):
 		loss = calculateLeastSquaresVector(prediction, actual)
 		
 		previousLayerLoss = np.zeros(receivedInput.shape) # contains the loss of the previous layer
-        filtersCorrection = np.zeros(filter.shape) # will be used to compute the updated filters
-		
+		filtersCorrection = np.zeros(filter.shape) # will be used to compute the updated filters
+
 		for i in range(filter.shape[0]):  #for i along the height
 			filtersCorrection[i] = loss * (previousLayer[i] * exp(receivedInput))/pow((exp(receivedInput)+1), 2) 
 			filter = filter - learningRate*filtersCorrection
@@ -55,3 +55,5 @@ class FullyConnectedLayer(Layer):
 		
 		
 		return previousLayerLoss, filter
+
+
