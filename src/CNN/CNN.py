@@ -17,9 +17,9 @@ class CNN:
         TODO : implement backprop and a training function
     """
 
-    def __init__(self, isLearning=False):
-        self._layers = []
+    def __init__(self, isLearning=True):
         self._isLearning = isLearning
+        self._layers = []
         self._output = None
         self.buildNetwork()
 
@@ -39,10 +39,9 @@ class CNN:
         """
         currentTensor = inputTensor
         for layer in self._layers:
-            print(currentTensor.shape)
             currentTensor = layer.compute(currentTensor)
-        if self._isLearning:
-            self._output = currentTensor
+        print("RESULT: ", currentTensor)
+        self._output = currentTensor
         return currentTensor
 
     def train(self, expected):
@@ -50,7 +49,10 @@ class CNN:
             Main training Function, it computes the loss of the output layer and
             uses back prop to update the parameters (filters, weights) of the network.
         """
-        currentLoss = FullyConnectedLayer.calculateLeastSquares(self._output, expected)
+        currentLoss = FullyConnectedLayer.squaredError(self._output, expected)
+        print("EXPECTED", expected)
+        print("OUTPUTED: ", self._output)
+        print("ERROR: ", currentLoss)
         for i in range(len(self._layers)-1, 0, -1):
             currentLoss = self._layers[i].learn(currentLoss)
 
