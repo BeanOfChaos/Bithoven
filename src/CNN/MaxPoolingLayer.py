@@ -19,9 +19,9 @@ class MaxPoolingLayer(Layer):
             partSize :  side size of the square area
         """
         # computing the shape of the result tensor and building it
-        resShape = tuple([int(tensor.shape[0]/partSize),
-                          int(tensor.shape[1]/partSize),
-                          tensor.shape[2]])
+        resShape = (tensor.shape[0]//partSize,
+                    tensor.shape[1]//partSize,
+                    tensor.shape[2])
         res = np.zeros(resShape)
         # the tensor should be 3 dimensions,
         # the first being the number of the filters used in the previous layer,
