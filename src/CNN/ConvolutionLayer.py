@@ -32,7 +32,7 @@ class ConvolutionLayer(Layer):
                     # and (2) the current filter (3 dimensional dot product)
                     featureMap[i][j][f] \
                             = np.tensordot(tensor[i:i+filters.shape[1],
-                                           j:j+filters.shape[2], :],
+                                                  j:j+filters.shape[2], :],
                                            filters[f],
                                            axes=([0, 1, 2], [0, 1, 2]))
         return featureMap
