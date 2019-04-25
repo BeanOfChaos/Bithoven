@@ -1,9 +1,8 @@
-from math import exp, pow
 import numpy as np
 from CNN.AbstractLayer import Layer
 
 class FullyConnectedLayer(Layer):
-    
+
     def __init__(self, weights, learningRate, stride=1, isLearning=True):
         super(FullyConnectedLayer, self).__init__(isLearning)
         self._weights = weights
@@ -15,11 +14,10 @@ class FullyConnectedLayer(Layer):
         Basic Sigmoid calculation
         """
         print(value)
-        print(exp(-value))
-        #return exp(value)/(exp(value) + 1)
-        return 1/(exp(-value) + 1)
-    
-        
+        #return np.exp(value)/(np.exp(value) + 1)
+        print(1/(np.exp(-value) + 1))
+        return 1/(np.exp(-value) + 1)
+
     @staticmethod
     def connect(vector, weights):
         """
@@ -31,12 +29,10 @@ class FullyConnectedLayer(Layer):
         node = np.dot(vector, weights)
         result = FullyConnectedLayer.sigmoid(node)
         return result
-        
 
     def calculateLeastSquares(prediction, actual):
-        return 1/2 * pow(prediction-actual, 2)
-        
-        
+        return 1/2 * np.square(prediction-actual)
+
     @staticmethod
     def learnFullyConnected(loss, previousLayer, alpha, weights, learningRate):
         """
@@ -49,17 +45,17 @@ class FullyConnectedLayer(Layer):
         filtersCorrection = np.zeros(weights.shape) # will be used to compute the updated weightss
 
         for i in range(weights.shape[0]):  #for i along the height
-            filtersCorrection[i] = loss * (previousLayer[i] * exp(alpha))/pow((exp(alpha)+1), 2) 
-            previousLayerLoss[i] = loss * (weights[i] * exp(alpha))/pow((exp(alpha)+1),2)
-        
+            filtersCorrection[i] = loss * (previousLayer[i] * np.exp(alpha))/np.square((np.exp(alpha)+1))
+            previousLayerLoss[i] = loss * (weights[i] * np.exp(alpha))/np.square((np.exp(alpha)+1))
+
             weights = weights - learningRate*filtersCorrection
-        
+
         return previousLayerLoss, weights
 
 
     def compute(self, tensor):
         """
-		basic computation function, calls the main function
+        basic computation function, calls the main function
         """
         vector = np.reshape(tensor, -1)
         res = FullyConnectedLayer.connect(vector, self._weights)
@@ -74,4 +70,3 @@ class FullyConnectedLayer(Layer):
         previousLayerLoss, self._weights = FullyConnectedLayer.learnFullyConnected(loss, previousLayer.reshape(-1), alpha, self._weights, self._learningRate)
 
         return previousLayerLoss.reshape(previousLayer.shape)
-
