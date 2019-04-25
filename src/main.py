@@ -13,8 +13,8 @@ if __name__ == "__main__":
 
     cats = os.listdir('../dataset/Cat')
     dogs = os.listdir('../dataset/Dog')
-    dataset = [(1, '../dataset/Cat/' + catpic) for catpic in cats] \
-        + [(0, '../dataset/Dog/' + dogpic) for dogpic in dogs]
+    dataset = [(0, '../dataset/Dog/' + dogpic) for dogpic in dogs] \
+        + [(1, '../dataset/Cat/' + catpic) for catpic in cats]
 
     shuffle(dataset)
     x = len(dataset) // 5
@@ -24,9 +24,10 @@ if __name__ == "__main__":
         pic = np.array(Image.open(filename).resize(IMG_SIZE), dtype="float64")
         # normalize data
         pic /= 255
+        print("TYPE: ", type)
         pred = round(discr.predict(pic))
         if pred != type:
-            discr.train(pred)
+            discr.train(type)
 
     # FN, FP, TN, TP
     scores = [[0, 0], [0, 0]]
