@@ -3,7 +3,7 @@ from CNN.AbstractLayer import Layer
 
 class FullyConnectedLayer(Layer):
 
-    def __init__(self, weights, learningRate, stride=1, isLearning=True):
+    def __init__(self, weights, learningRate, isLearning=True):
         super(FullyConnectedLayer, self).__init__(isLearning)
         self._weights = weights
         self._learningRate = learningRate
