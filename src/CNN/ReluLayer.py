@@ -11,7 +11,7 @@ class ReluLayer(Layer):
         # relu is a simple function keeping positive values in a tensor,
         # and changing the negative ones to zero.
         self.saveData(tensor)
-        return np.maximum(tensor, np.zeros(tensor.shape))
+        return np.maximum(tensor, 0, tensor)
 
     def learn(self, loss):
         """
