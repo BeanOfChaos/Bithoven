@@ -2,7 +2,7 @@ from CNN.CNN import CNN
 import numpy as np
 import pickle
 
-CHANNEL_NUM = 5
+CHANNEL_NUM = 3
 
 
 class Discriminator(CNN):
@@ -11,15 +11,15 @@ class Discriminator(CNN):
         super(Discriminator, self).__init__(isTraining)
 
     def buildNetwork(self):
-        self.addConvLayer(np.random.rand(8, 7, 7, CHANNEL_NUM), 0.01)
-        self.addReluLayer()
-        self.addConvLayer(np.random.rand(4, 7, 7, CHANNEL_NUM), 0.01)
-        self.addReluLayer()
-        self.addPoolingLayer()
         self.addConvLayer(np.random.rand(2, 7, 7, CHANNEL_NUM), 0.01)
-        self.addReluLayer()
+        #self.addReluLayer()
+        #self.addConvLayer(np.random.rand(4, 7, 7, 8), 0.01)
+        #self.addReluLayer()
         self.addPoolingLayer()
-        self.addFullyConnectedLayer(np.random.rand(98), 0.01)
+        #self.addConvLayer(np.random.rand(2, 7, 7, 4), 0.01)
+        #self.addReluLayer()
+        self.addPoolingLayer()
+        self.addFullyConnectedLayer(np.random.rand(8192), 0.01)
         # do that again
 
         # self.addFullyconnectedLayer(classes = 2) # is / isn't generated music

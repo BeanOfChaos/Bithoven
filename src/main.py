@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
     for type, filename in training_set:
         pic = np.array(Image.open(filename).resize(IMG_SIZE))
-        pred = round(discr.predict())
+        pred = round(discr.predict(pic))
         if pred != type:
             discr.train(pred)
 
@@ -29,5 +29,5 @@ if __name__ == "__main__":
     scores = [[0, 0], [0, 0]]
     for type, filename in validation_set:
         pic = np.array(Image.open(filename))
-        pred = round(discr.predict())
+        pred = round(discr.predict(pic))
         scores[pred == type][type] += 1

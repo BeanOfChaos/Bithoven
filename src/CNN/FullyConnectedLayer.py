@@ -14,7 +14,10 @@ class FullyConnectedLayer(Layer):
         """
         Basic Sigmoid calculation
         """
-        return exp(value)/(exp(value) + 1)
+        print(value)
+        print(exp(-value))
+        #return exp(value)/(exp(value) + 1)
+        return 1/(exp(-value) + 1)
     
         
     @staticmethod
@@ -60,15 +63,15 @@ class FullyConnectedLayer(Layer):
         """
         vector = np.reshape(tensor, -1)
         res = FullyConnectedLayer.connect(vector, self._weights)
-        self.saveData((vector, res))
+        self.saveData((tensor, res))
         return res
 
     def learn(self, loss):
         """
         basic learning method, sets some parameters and calls the main function
         """
-        (previousLayer, alpha) = self.getData()
-        previousLayerLoss, waights = FullyConnectedLayer.learnFullyConnected(loss, previousLayer, alpha, self._weights, self._learningRate)
+        (previousLayer, alpha) = self.getSavedData()
+        previousLayerLoss, self._weights = FullyConnectedLayer.learnFullyConnected(loss, previousLayer.reshape(-1), alpha, self._weights, self._learningRate)
 
-        return previousLayerLoss
+        return previousLayerLoss.reshape(previousLayer.shape)
 
