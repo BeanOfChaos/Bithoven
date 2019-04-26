@@ -14,7 +14,7 @@ class FullyConnectedLayer(Layer):
         Basic Sigmoid calculation
         """
         #return np.exp(value)/(np.exp(value) + 1)
-        print(1/(np.exp(-value) + 1))
+        print("sigmoid value to be computed : ", value)
         return 1/(np.exp(-value) + 1)
 
     @staticmethod
@@ -27,7 +27,7 @@ class FullyConnectedLayer(Layer):
         """
         node = np.dot(vector, weights)
         result = FullyConnectedLayer.sigmoid(node)
-        return result
+        return (node, result)
 
     def squaredError(prediction, actual):
         return 1/2 * np.square(prediction - actual)
@@ -40,6 +40,7 @@ class FullyConnectedLayer(Layer):
         weights : weights vector
         """
         # contains the loss of the previous layer
+        print("alpha : ", alpha)
         previousLayerLoss = np.zeros(previousLayer.shape)
         # will be used to compute the updated weightss
         filtersCorrection = np.zeros(weights.shape)
@@ -48,7 +49,11 @@ class FullyConnectedLayer(Layer):
             previousLayerLoss[i] = loss * weights[i] * np.exp(alpha) / np.square(np.exp(alpha)+1)
 
             weights = weights - learningRate * filtersCorrection
+        print("weights : \n")
+        print(weights)
 
+        print("filtersCorrection : \n")
+        print(filtersCorrection)
         return previousLayerLoss, weights
 
     def compute(self, tensor):
@@ -56,8 +61,8 @@ class FullyConnectedLayer(Layer):
         basic computation function, calls the main function
         """
         vector = np.reshape(tensor, -1)
-        res = FullyConnectedLayer.connect(vector, self._weights)
-        self.saveData((tensor, res))
+        node, res = FullyConnectedLayer.connect(vector, self._weights)
+        self.saveData((tensor, node))
         return res
 
     def learn(self, loss):
@@ -67,3 +72,5 @@ class FullyConnectedLayer(Layer):
         previousLayer, alpha = self.getSavedData()
         previousLayerLoss, self._weights = FullyConnectedLayer.learnFullyConnected(loss, previousLayer.reshape(-1), alpha, self._weights, self._learningRate)
         return previousLayerLoss.reshape(previousLayer.shape)
+
+		
