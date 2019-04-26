@@ -14,7 +14,6 @@ class FullyConnectedLayer(Layer):
         Basic Sigmoid calculation
         """
         #return np.exp(value)/(np.exp(value) + 1)
-        print("sigmoid value to be computed : ", value)
         return 1/(np.exp(-value) + 1)
 
     @staticmethod
@@ -40,7 +39,6 @@ class FullyConnectedLayer(Layer):
         weights : weights vector
         """
         # contains the loss of the previous layer
-        print("alpha : ", alpha)
         previousLayerLoss = np.zeros(previousLayer.shape)
         # will be used to compute the updated weightss
         filtersCorrection = np.zeros(weights.shape)
@@ -49,11 +47,7 @@ class FullyConnectedLayer(Layer):
             previousLayerLoss[i] = loss * weights[i] * np.exp(alpha) / np.square(np.exp(alpha)+1)
 
             weights = weights - learningRate * filtersCorrection
-        print("weights : \n")
-        print(weights)
 
-        print("filtersCorrection : \n")
-        print(filtersCorrection)
         return previousLayerLoss, weights
 
     def compute(self, tensor):
