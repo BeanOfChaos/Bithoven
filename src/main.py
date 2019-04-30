@@ -21,9 +21,11 @@ if __name__ == "__main__":
     training_set, validation_set = dataset[x:], dataset[:x]
 
     for type, filename in training_set:
+        print("---------------------------")
         pic = np.array(Image.open(filename).resize(IMG_SIZE), dtype="float64")
         # normalize data
-        pic /= 255
+        pic /= 128
+        pic -= 1
         print("TYPE: ", type)
         pred = round(discr.predict(pic))
         if pred != type:
