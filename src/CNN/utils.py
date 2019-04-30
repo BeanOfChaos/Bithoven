@@ -19,4 +19,4 @@ def reLu(x, derivative=False):
     if derivative:
         return x > 0  # True == 1 and False == 0
     else:
-        return x if x > 0 else 0
+        return x * (x > 0)
