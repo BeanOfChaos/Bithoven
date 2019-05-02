@@ -37,7 +37,6 @@ class FullyConnectedLayer(Layer):
         previousLayerLoss = np.zeros(previousLayer.shape)
         # will be used to compute the updated weightss
         filtersCorrection = np.zeros(weights.shape)
-        print(loss)
         for i in range(weights.shape[0]):  # for i along the height
             df = act_f(alpha, derivative=True)
             filtersCorrection[i] = loss * previousLayer[i] * df

@@ -50,10 +50,9 @@ class CNN:
             uses back prop to update the parameters (filters, weights) of the network.
         """
         currentLoss = FullyConnectedLayer.squaredError(self._output, expected)
-
         print("ERROR: ", currentLoss)
         for i in range(len(self._layers)-1, 0, -1):
-            currentLoss = self._layers[i].learn(self._output - currentLoss)
+            currentLoss = self._layers[i].learn(self._output - expected)
 
     def addConvLayer(self, filters, learningRate, stride=1):
         self._layers.append(ConvolutionLayer(filters,
