@@ -28,8 +28,7 @@ if __name__ == "__main__":
         pic -= 1
         print("TYPE: ", type)
         pred = round(discr.predict(pic))
-        if pred != type:
-            discr.train(type)
+        discr.train(type)
 
     # FN, FP, TN, TP
     scores = [[0, 0], [0, 0]]

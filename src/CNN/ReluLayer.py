@@ -1,5 +1,6 @@
 import numpy as np
 from CNN.AbstractLayer import Layer
+from CNN.utils import reLu
 
 
 class ReluLayer(Layer):
@@ -11,7 +12,7 @@ class ReluLayer(Layer):
         # relu is a simple function keeping positive values in a tensor,
         # and changing the negative ones to zero.
         self.saveData(tensor)
-        return np.maximum(tensor, 0, tensor)
+        return reLu(tensor)
 
     def learn(self, loss):
         """
