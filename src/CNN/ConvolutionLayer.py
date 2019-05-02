@@ -1,4 +1,5 @@
 from CNN.AbstractLayer import Layer
+import numpy as np
 
 
 class ConvolutionLayer(Layer):
