@@ -35,8 +35,8 @@ class ConvolutionLayer(Layer):
                     # (1) the current receptive field, and
                     # (2) the current filter (3 dimensional dot product)
                     featureMap[i][j][f] \
-                            = np.tensordot(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :], filters[f], axes=((0, 1, 2), (0, 1, 2)))
-                            #= np.sum(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :].flatten() * filters[f].flatten()) / filters[0].size
+                            = np.sum(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :].flatten() * filters[f].flatten()) / filters[0].size
+                            # = np.tensordot(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :], filters[f], axes=((0, 1, 2), (0, 1, 2)))
         return featureMap
 
     @staticmethod

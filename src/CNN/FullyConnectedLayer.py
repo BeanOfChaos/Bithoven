@@ -35,7 +35,7 @@ class FullyConnectedLayer(Layer):
         """
         # contains the loss of the previous layer
         previousLayerLoss = np.zeros(previousLayer.shape)
-        # will be used to compute the updated weightss
+        # will be used to compute the updated weights
         filtersCorrection = np.zeros(weights.shape)
         for i in range(weights.shape[0]):  # for i along the height
             df = act_f(alpha, derivative=True)
@@ -51,7 +51,6 @@ class FullyConnectedLayer(Layer):
         basic computation function, calls the main function
         """
         vector = tensor.flatten()
-
         node, res = FullyConnectedLayer.connect(vector, self._weights, self._act_f)
         # saves last input and intermediate results
         self.saveData((tensor, node))

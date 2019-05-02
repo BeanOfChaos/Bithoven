@@ -46,7 +46,6 @@ class MaxPoolingLayer(Layer):
         """
         # savedData = (receivedInput, sentData)
         previousLayerLoss, sentData = savedData
-
         for lossi in range(loss.shape[0]):
             for lossj in range(loss.shape[1]):
                 for k in range(loss.shape[2]):
