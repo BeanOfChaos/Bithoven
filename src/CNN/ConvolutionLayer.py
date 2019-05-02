@@ -36,12 +36,11 @@ class ConvolutionLayer(Layer):
                     # (2) the current filter (3 dimensional dot product)
                     try:
                         featureMap[i][j][f] \
-                                = np.tensordot(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :], filters[f], axes=((0, 1, 2), (0, 1, 2)))
+                            = np.sum(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :].flatten() * filters[f].flatten()) / filters[0].size
+                            # = np.tensordot(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :], filters[f], axes=((0, 1, 2), (0, 1, 2)))
                     except Exception as e:
                         print(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :].shape, filters[f].shape)
                         raise e
-                            #= np.sum(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :].flatten() * filters[f].flatten()) / filters[0].size
-                            
         return featureMap
 
     @staticmethod

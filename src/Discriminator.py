@@ -12,17 +12,17 @@ class Discriminator(CNN):
         super(Discriminator, self).__init__(isLearning)
 
     def buildNetwork(self):
-        self.addConvLayer(np.random.rand(2, 7, 7, CHANNEL_NUM), LEARNING_RATE)
+        self.addConvLayer(np.random.rand(2, 7, 7, CHANNEL_NUM)*2 - 1, LEARNING_RATE)
         self.addReluLayer()
-        self.addConvLayer(np.random.rand(4, 7, 7, 2), LEARNING_RATE)
+        self.addConvLayer(np.random.rand(4, 7, 7, 2)*2 - 1, LEARNING_RATE)
         self.addReluLayer()
-        self.addPoolingLayer()#partitionSize=4)
-        self.addConvLayer(np.random.rand(2, 7, 7, 4), LEARNING_RATE)
+        self.addPoolingLayer()
+        self.addConvLayer(np.random.rand(2, 7, 7, 4)*2 - 1, LEARNING_RATE)
         self.addReluLayer()
         self.addPoolingLayer()
         # TODO: express the size of the layer w.r.t. convolution stride size
         # instead of hard coding it
-        self.addFullyConnectedLayer(np.random.rand(6498), LEARNING_RATE)
+        self.addFullyConnectedLayer(np.random.rand(6498)*2-1, LEARNING_RATE)
         # do that again
 
         # self.addFullyconnectedLayer(classes = 2) # is / isn't generated music

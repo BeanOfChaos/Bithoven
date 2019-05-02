@@ -28,14 +28,16 @@ if __name__ == "__main__":
         pic -= 1
         print("TYPE: ", type)
         pred = round(discr.predict(pic))
-        discr.train(type)
+        if pred != type:
+            discr.train(type)
 
     # FN, FP, TN, TP
     scores = [[0, 0], [0, 0]]
     for type, filename in validation_set:
         pic = np.array(Image.open(filename).resize(IMG_SIZE), dtype="float64")
         # normalize data
-        pic /= 255
+        pic /= 128
+        pic -= 1
         pred = round(discr.predict(pic))
         scores[pred == type][type] += 1
     print(scores)
