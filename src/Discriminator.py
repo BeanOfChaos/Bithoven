@@ -13,14 +13,14 @@ class Discriminator(CNN):
     def buildNetwork(self):
         self.addConvLayer(np.random.rand(2, 7, 7, CHANNEL_NUM), 0.01)
         self.addReluLayer()
-        #self.addConvLayer(np.random.rand(4, 7, 7, 8), 0.01)
-        #self.addReluLayer()
+        self.addConvLayer(np.random.rand(4, 7, 7, 2), 0.01)
+        self.addReluLayer()
         self.addPoolingLayer(partitionSize=4)
-        #self.addConvLayer(np.random.rand(2, 7, 7, 4), 0.01)
-        #self.addReluLayer()
-        #self.addPoolingLayer()
+        self.addConvLayer(np.random.rand(2, 7, 7, 4), 0.01)
+        self.addReluLayer()
+        self.addPoolingLayer()
         # TODO: express the size of the layer w.r.t. convolution stride size
-        self.addFullyConnectedLayer(np.random.rand(7688), 0.01)
+        self.addFullyConnectedLayer(np.random.rand(1352), 0.01)
         # do that again
 
         # self.addFullyconnectedLayer(classes = 2) # is / isn't generated music
