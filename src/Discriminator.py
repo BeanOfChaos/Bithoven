@@ -3,7 +3,7 @@ import numpy as np
 import pickle
 
 CHANNEL_NUM = 3
-LEARNING_RATE = 1
+LEARNING_RATE = 0.01
 
 
 class Discriminator(CNN):
@@ -17,7 +17,7 @@ class Discriminator(CNN):
         self.addConvLayer(np.random.rand(4, 7, 7, 2)*2 - 1, LEARNING_RATE)
         self.addReluLayer()
         self.addPoolingLayer(partitionSize=4)
-        self.addConvLayer(np.random.rand(2, 7, 7, 4)*2, LEARNING_RATE)
+        self.addConvLayer(np.random.rand(2, 7, 7, 4)*2 - 1, LEARNING_RATE)
         self.addReluLayer()
         self.addPoolingLayer()
         # TODO: express the size of the layer w.r.t. convolution stride size

@@ -24,12 +24,12 @@ if __name__ == "__main__":
         print("---------------------------")
         pic = np.array(Image.open(filename).resize(IMG_SIZE), dtype="float64")
         # normalize data
-        pic /= 128
-        pic -= 1
+        pic -= np.mean(pic, axis=(0,1))
+        pic -= np.std(pic, axis=(0,1))
         print("TYPE: ", type)
         pred = round(discr.predict(pic))
-        if pred != type:
-            discr.train(type)
+        print("Correct!" if type == pred else "Failed!")
+        discr.train(type)
 
     # FN, FP, TN, TP
     scores = [[0, 0], [0, 0]]
