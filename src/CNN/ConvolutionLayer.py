@@ -39,6 +39,7 @@ class ConvolutionLayer(Layer):
                             = np.tensordot(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :], filters[f], axes=((0, 1, 2), (0, 1, 2))) / filters[0].size
                             # np.sum(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :].flatten() * filters[f].flatten()) / filters[0].size
                     except Exception as e:
+                        print(tensor.shape, filters.shape)
                         print(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :].shape, filters[f].shape)
                         raise e
         return featureMap

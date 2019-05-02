@@ -17,13 +17,13 @@ class CNN:
         TODO : implement backprop and a training function
     """
 
-    def __init__(self, isLearning=True):
+    def __init__(self, isLearning, learningRate):
         self._isLearning = isLearning
         self._layers = []
         self._output = None
-        self.buildNetwork()
+        self.buildNetwork(learningRate)
 
-    def buildNetwork(self):
+    def buildNetwork(self, learningRate):
         """
             Here is built the network, the layers are stacked.
             First one being the input layer.
