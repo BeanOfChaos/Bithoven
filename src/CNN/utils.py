@@ -1,5 +1,6 @@
 import numpy as np
 from PIL import Image
+import os
 
 
 LEARNING_RATE = 0.01
@@ -8,17 +9,18 @@ IMG_SIZE = (256, 256)
 
 
 def loadImage(filename):
-    valid, img = True, Image.open(filename)
+    valid, img = True, None
     try:
+        img = Image.open(filename)
         img.verify()
     except Exception as e:
         valid = False
-        os.remove(filename)
+        #os.remove(filename)
     else:
         img = np.array(Image.open(filename).resize(IMG_SIZE), dtype="float64")
         if img.shape != (IMG_SIZE[0], IMG_SIZE[1], CHANNEL_NUM):
             valid = False
-            os.remove(filename)
+            #os.remove(filename)
     finally:
         return valid, img
 

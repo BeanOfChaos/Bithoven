@@ -20,28 +20,18 @@ class ConvolutionLayer(Layer):
             filters : an array of filters (3 dimensional filters)
         """
         # init the resulting feature map
-        truc = list(tensor.shape[:-1])
-        truc = [(truc[i] - filters.shape[i+1]) // (stride)
-                for i in range(len(truc))] + [filters.shape[0]]
-        featureMap = np.zeros(tuple(truc))
-        """
-        tensor = np.pad(tensor, ((0, filters.shape[1] - stride),
-                        (0, filters.shape[2] - stride), (0, 0)), "constant")
-        """
+        shape = list(tensor.shape[:-1])
+        shape = [(shape[i] - filters.shape[i+1]) // (stride)
+                for i in range(len(shape))] + [filters.shape[0]]
+        featureMap = np.zeros(tuple(shape))
         for f in range(filters.shape[0]):  # for each 3-dimensional filter
-            for i in range(featureMap.shape[0]):  # line i
-                for j in range(featureMap.shape[1]):  # column j
+            for i in range(0, featureMap.shape[0], stride):  # line i
+                for j in range(0, featureMap.shape[1], stride):  # column j
                     # we compute the result of the dot product between:
                     # (1) the current receptive field, and
                     # (2) the current filter (3 dimensional dot product)
-                    try:
-                        featureMap[i][j][f] \
-                            = np.tensordot(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :], filters[f], axes=((0, 1, 2), (0, 1, 2))) / filters[0].size
-                            # np.sum(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :].flatten() * filters[f].flatten()) / filters[0].size
-                    except Exception as e:
-                        print(tensor.shape, filters.shape)
-                        print(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :].shape, filters[f].shape)
-                        raise e
+                    featureMap[i][j][f] \
+                        = np.tensordot(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :], filters[f], axes=((0, 1, 2), (0, 1, 2))) / filters[0].size
         return featureMap
 
     @staticmethod

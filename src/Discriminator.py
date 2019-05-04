@@ -12,17 +12,24 @@ class Discriminator(CNN):
         print("learning rate : ", learningRate)
 
     def buildNetwork(self, learningRate):
-        self.addConvLayer(np.random.rand(2, 7, 7, CHANNEL_NUM)*2 - 1, learningRate)
-        self.addReluLayer()
-        self.addConvLayer(np.random.rand(4, 7, 7, 2)*2 - 1, learningRate)
+        self.addConvLayer(np.random.rand(16, 5, 5, CHANNEL_NUM)*2 - 1, learningRate)
         self.addReluLayer()
         self.addPoolingLayer()
-        self.addConvLayer(np.random.rand(2, 7, 7, 4)*2 - 1, learningRate)
+
+        self.addConvLayer(np.random.rand(8, 5, 5, 16)*2 - 1, learningRate)
+        self.addReluLayer()
+        self.addPoolingLayer()
+
+        self.addConvLayer(np.random.rand(4, 5, 5, 8)*2 - 1, learningRate)
+        self.addReluLayer()
+        self.addPoolingLayer()
+
+        self.addConvLayer(np.random.rand(2, 5, 5, 4)*2 - 1, learningRate)
         self.addReluLayer()
         self.addPoolingLayer()
         # TODO: express the size of the layer w.r.t. convolution stride size
         # instead of hard coding it
-        self.addFullyConnectedLayer(np.random.rand(6498)*2-1, learningRate)
+        self.addFullyConnectedLayer(np.random.rand(242)*2-1, learningRate)
 
 
     def dump_model(self, filename):
