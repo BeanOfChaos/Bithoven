@@ -68,3 +68,13 @@ class CNN:
 
     def addFullyConnectedLayer(self, filters, learningRate):
         self._layers.append(FullyConnectedLayer(filters, learningRate))
+
+    def setLearning(self):
+        self._isLearning = True
+        for layer in self._layers:
+            layer.setLearning()
+
+    def unsetLearning(self):
+        self._isLearning = False
+        for layer in self._layers:
+            layer.unsetLearning()

@@ -1,8 +1,8 @@
 from CNN.CNN import CNN
+from CNN.utils import CHANNEL_NUM
 import numpy as np
 import pickle
 
-CHANNEL_NUM = 3
 
 
 class Discriminator(CNN):
@@ -23,9 +23,7 @@ class Discriminator(CNN):
         # TODO: express the size of the layer w.r.t. convolution stride size
         # instead of hard coding it
         self.addFullyConnectedLayer(np.random.rand(6498)*2-1, learningRate)
-        # do that again
 
-        # self.addFullyconnectedLayer(classes = 2) # is / isn't generated music
 
     def dump_model(self, filename):
         """Dumps the model to filename.
