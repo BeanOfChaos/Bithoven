@@ -12,13 +12,13 @@ def loadImage(filename):
     try:
         img.verify()
     except Exception as e:
-        os.remove(filename)
         valid = False
+        os.remove(filename)
     else:
         img = np.array(Image.open(filename).resize(IMG_SIZE), dtype="float64")
-        if img.shape != (IMG_SIZE[0], IMG_SIZE[1], 3):
-            os.remove(filename)
+        if img.shape != (IMG_SIZE[0], IMG_SIZE[1], CHANNEL_NUM):
             valid = False
+            os.remove(filename)
     finally:
         return valid, img
 
