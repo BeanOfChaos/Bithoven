@@ -17,13 +17,13 @@ class CNN:
         TODO : implement backprop and a training function
     """
 
-    def __init__(self, isLearning, learningRate):
+    def __init__(self, isLearning, learningRate, allowedThreads):
         self._isLearning = isLearning
         self._layers = []
         self._output = None
-        self.buildNetwork(learningRate)
+        self.buildNetwork(learningRate, allowedThreads)
 
-    def buildNetwork(self, learningRate):
+    def buildNetwork(self, learningRate, allowedThreads):
         """
             Here is built the network, the layers are stacked.
             First one being the input layer.
@@ -54,11 +54,12 @@ class CNN:
         for i in range(len(self._layers)-1, -1, -1):
             currentLoss = self._layers[i].learn(currentLoss)
 
-    def addConvLayer(self, filters, learningRate, stride=1):
+    def addConvLayer(self, filters, learningRate, allowedThreads, stride=1):
         self._layers.append(ConvolutionLayer(filters,
                                              learningRate,
                                              stride,
-                                             self._isLearning))
+                                             self._isLearning,
+                                             allowedThreads))
 
     def addReluLayer(self):
         self._layers.append(ReluLayer(self._isLearning))

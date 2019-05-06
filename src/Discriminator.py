@@ -7,24 +7,23 @@ import pickle
 
 class Discriminator(CNN):
 
-    def __init__(self, isLearning, learningRate):
-        super(Discriminator, self).__init__(isLearning, learningRate)
-        print("learning rate : ", learningRate)
+    def __init__(self, isLearning, learningRate, allowedThreads=None):
+        super(Discriminator, self).__init__(isLearning, learningRate, allowedThreads)
 
-    def buildNetwork(self, learningRate):
-        self.addConvLayer(np.random.rand(16, 5, 5, CHANNEL_NUM)*2 - 1, learningRate)
+    def buildNetwork(self, learningRate, allowedThreads):
+        self.addConvLayer(np.random.rand(16, 5, 5, CHANNEL_NUM)*2 - 1, learningRate, allowedThreads)
         self.addReluLayer()
         self.addPoolingLayer()
 
-        self.addConvLayer(np.random.rand(8, 5, 5, 16)*2 - 1, learningRate)
+        self.addConvLayer(np.random.rand(8, 5, 5, 16)*2 - 1, learningRate, allowedThreads)
         self.addReluLayer()
         self.addPoolingLayer()
 
-        self.addConvLayer(np.random.rand(4, 5, 5, 8)*2 - 1, learningRate)
+        self.addConvLayer(np.random.rand(4, 5, 5, 8)*2 - 1, learningRate, allowedThreads)
         self.addReluLayer()
         self.addPoolingLayer()
 
-        self.addConvLayer(np.random.rand(2, 5, 5, 4)*2 - 1, learningRate)
+        self.addConvLayer(np.random.rand(2, 5, 5, 4)*2 - 1, learningRate, allowedThreads)
         self.addReluLayer()
         self.addPoolingLayer()
         # TODO: express the size of the layer w.r.t. convolution stride size

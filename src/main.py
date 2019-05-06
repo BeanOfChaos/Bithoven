@@ -10,10 +10,16 @@ from CNN.utils import loadImage, normalize, LEARNING_RATE
 
 if __name__ == "__main__":
     learningRate = LEARNING_RATE
+    allowedThreads = None
     if len(sys.argv) > 1:
         learningRate = float(sys.argv[1])
+    if len(sys.argv) > 2:
+        allowedThreads = int(sys.argv[2])
 
-    discr = Discriminator(True, learningRate)
+    print("learning rate : ", learningRate)
+    print("using up to {} threads".format(allowedThreads))
+
+    discr = Discriminator(True, learningRate, allowedThreads)
     cats = os.listdir('../dataset/Cat')
     dogs = os.listdir('../dataset/Dog')
     dataset = [(0, '../dataset/Dog/' + dogpic) for dogpic in dogs] \
