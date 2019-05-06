@@ -26,7 +26,7 @@ if __name__ == "__main__":
         + [(1, '../dataset/Cat/' + catpic) for catpic in cats]
 
     shuffle(dataset)
-    x = len(dataset) // 5
+    x = len(dataset) // 10
     training_set, validation_set = dataset[x:], dataset[:x]
 
     for i, (type, filename) in enumerate(training_set, 1):
@@ -46,8 +46,7 @@ if __name__ == "__main__":
     discr.unsetLearning()
     # FN, FP, TN, TP
     scores = [[0, 0], [0, 0]]
-    for i, (type, filename) in enumarate(validation_set, 1):
-        img = Image.open(filename)
+    for i, (type, filename) in enumerate(validation_set, 1):
         valid, pic = loadImage(filename)
         if valid:
             # normalize data
