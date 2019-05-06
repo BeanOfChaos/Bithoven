@@ -40,7 +40,6 @@ class CNN:
         currentTensor = inputTensor
         for layer in self._layers:
             currentTensor = layer.compute(currentTensor)
-        print("RESULT: ", currentTensor)
         self._output = currentTensor
         return currentTensor
 
@@ -49,10 +48,10 @@ class CNN:
             Main training Function, it computes the loss of the output layer and
             uses back prop to update the parameters (filters, weights) of the network.
         """
-        currentLoss = self._output - expected
-        print("ERROR: ", currentLoss)
+        error = currentLoss = self._output - expected
         for i in range(len(self._layers)-1, -1, -1):
             currentLoss = self._layers[i].learn(currentLoss)
+        return error
 
     def addConvLayer(self, filters, learningRate, allowedThreads, stride=1):
         self._layers.append(ConvolutionLayer(filters,

@@ -13,11 +13,11 @@ if __name__ == "__main__":
     allowedThreads = None
     if len(sys.argv) > 1:
         learningRate = float(sys.argv[1])
+        print("learning rate : ", learningRate)
     if len(sys.argv) > 2:
         allowedThreads = int(sys.argv[2])
+        print("using up to {} threads".format(allowedThreads))
 
-    print("learning rate : ", learningRate)
-    print("using up to {} threads".format(allowedThreads))
 
     discr = Discriminator(True, learningRate, allowedThreads)
     cats = os.listdir('../dataset/Cat')
@@ -29,29 +29,32 @@ if __name__ == "__main__":
     x = len(dataset) // 5
     training_set, validation_set = dataset[x:], dataset[:x]
 
-    for type, filename in training_set:
-        print("---------------------------")
-        print("image : ", filename)
+    for i, (type, filename) in enumerate(training_set, 1):
+        #print("---------------------------")
+        #print("image : ", filename)
         valid, pic = loadImage(filename)
         if valid:
             # normalize data
             pic = normalize(pic)
-            print("TYPE: ", type)
+            #print("TYPE: ", type)
             pred = round(discr.predict(pic))
-            print("Correct!" if type == pred else "Failed!")
-            discr.train(type)
+            error = discr.train(type)
+            print("\rImage {}/{} : {}. Error : {}".format(i, len(training_set), "Correct" if type == pred else "Failed", error))
+            print("Training {:.2%} complete.".format(i/len(training_set)), end='')
+    print("\rTraining complete")
 
     discr.unsetLearning()
     # FN, FP, TN, TP
     scores = [[0, 0], [0, 0]]
-    for type, filename in validation_set:
+    for i, (type, filename) in enumarate(validation_set, 1):
         img = Image.open(filename)
-        print("image : ", filename)
         valid, pic = loadImage(filename)
         if valid:
             # normalize data
             pic = normalize(pic)
             pred = round(discr.predict(pic))
             scores[pred == type][type] += 1
+        print("\rValidation {:.2%} complete".format(i/len(validation_set)), end='')
+    print("\rValidation complete")
     print(scores)
     discr.dump_model("test{}.pickle".format(int(learningRate*1000)))
