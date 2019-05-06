@@ -1,17 +1,45 @@
 from CNN.AbstractLayer import Layer
 import numpy as np
 
+from multiprocessing import Pool
+from os import cpu_count
+from math import ceil
+
 
 class ConvolutionLayer(Layer):
 
-    def __init__(self, filters, learningRate, stride=1, isLearning=True):
+    def __init__(self, filters, learningRate, stride=1, isLearning=True, allowedThreads=None):
         super(ConvolutionLayer, self).__init__(isLearning)
         self._learningRate = learningRate
         self._filters = filters
         self._stride = stride
+        self._allowedThreads = allowedThreads or cpu_count()
+
+
+    def parallelize(self, func, param):
+        pool = Pool(self._allowedThreads)
+        res = pool.starmap_async(func, param, chunksize=ceil(len(param)/self._allowedThreads))
+        pool.close()
+        pool.join()
+        return res.get()
 
     @staticmethod
-    def convolve(tensor, filters, stride):
+    def convolveFilter(tensor, filters, fIndex, stride):
+        shape = list(tensor.shape[:-1])
+        shape = [(shape[i] - filters.shape[i+1]) // (stride)
+                for i in range(len(shape))] + [1]
+        featureMap = np.zeros(tuple(shape))
+        for i in range(0, featureMap.shape[0], stride):  # line i
+            for j in range(0, featureMap.shape[1], stride):  # column j
+                # we compute the result of the dot product between:
+                # (1) the current receptive field, and
+                # (2) the current filter (3 dimensional dot product)
+                featureMap[i][j][0] \
+                    = np.tensordot(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :], filters[fIndex], axes=((0, 1, 2), (0, 1, 2))) / filters[0].size
+        return (fIndex, featureMap)
+
+
+    def convolve(self, tensor):
         """
             Convolution layer.
             It takes a tensor input or the feature map produced by the previous
@@ -21,17 +49,12 @@ class ConvolutionLayer(Layer):
         """
         # init the resulting feature map
         shape = list(tensor.shape[:-1])
-        shape = [(shape[i] - filters.shape[i+1]) // (stride)
-                for i in range(len(shape))] + [filters.shape[0]]
+        shape = [(shape[i] - self._filters.shape[i+1]) // (self._stride)
+                for i in range(len(shape))] + [self._filters.shape[0]]
         featureMap = np.zeros(tuple(shape))
-        for f in range(filters.shape[0]):  # for each 3-dimensional filter
-            for i in range(0, featureMap.shape[0], stride):  # line i
-                for j in range(0, featureMap.shape[1], stride):  # column j
-                    # we compute the result of the dot product between:
-                    # (1) the current receptive field, and
-                    # (2) the current filter (3 dimensional dot product)
-                    featureMap[i][j][f] \
-                        = np.tensordot(tensor[i:i+filters.shape[1], j:j+filters.shape[2], :], filters[f], axes=((0, 1, 2), (0, 1, 2))) / filters[0].size
+        res = self.parallelize(ConvolutionLayer.convolveFilter, [(tensor, self._filters, i, self._stride) for i in range(self._filters.shape[0])])
+        for f, partFMap in res:
+            featureMap[:][:][f] = partFMap[:][:][0]
         return featureMap
 
     @staticmethod
@@ -63,7 +86,7 @@ class ConvolutionLayer(Layer):
             Wraps the computation static method
         """
         self.saveData(tensor)
-        return ConvolutionLayer.convolve(tensor, self._filters, self._stride)
+        return self.convolve(tensor)
 
     def learn(self, loss):
         """
