@@ -58,7 +58,7 @@ class ConvolutionLayer(Layer):
         return featureMap
 
     @staticmethod
-    def learnConv(loss, receivedInput, filters, learningRate):
+    def learnConv(loss, receivedInput, filters, stride, learningRate):
         """
             Function computing the loss of the previous layer and the updated filters.
             The received loss is computed in the next layer and sent here through backprop.
@@ -68,8 +68,8 @@ class ConvolutionLayer(Layer):
         # will be used to compute the updated filters
         filtersCorrection = np.zeros(filters.shape)
         for i in range(filters.shape[0]):  # for each filter
-            for j in range(filters.shape[1]):  # for i along the height
-                for k in range(filters.shape[2]):  # for j along the width
+            for j in range(0, filters.shape[1], stride):  # for i along the height
+                for k in range(0, filters.shape[2], stride):  # for j along the width
                     # computing dL/dinput and dL/dW
                     previousLayerLoss[j:j+filters.shape[1],
                                       k:k+filters.shape[2], :] \
@@ -96,5 +96,6 @@ class ConvolutionLayer(Layer):
             res, self._filters = ConvolutionLayer.learnConv(loss,
                                                             self.getSavedData(),
                                                             self._filters,
+                                                            self._stride,
                                                             self._learningRate)
             return res

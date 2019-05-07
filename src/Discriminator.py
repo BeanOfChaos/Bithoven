@@ -15,18 +15,22 @@ class Discriminator(CNN):
         self.addReluLayer()
         self.addConvLayer(np.random.rand(4, 5, 5, 2)*2 - 1, learningRate, allowedThreads)
         self.addReluLayer()
-        
-        self.addConvLayer(np.random.rand(8, 7, 7, 4)*2 - 1, learningRate, allowedThreads, stride=2)
+        self.addPoolingLayer()
+
+        self.addConvLayer(np.random.rand(8, 5, 5, 4)*2 - 1, learningRate, allowedThreads)#, stride=2)
         self.addReluLayer()
-        self.addConvLayer(np.random.rand(8, 7, 7, 8)*2 - 1, learningRate, allowedThreads, stride=2)
+        self.addPoolingLayer()
+        #self.addConvLayer(np.random.rand(8, 7, 7, 8)*2 - 1, learningRate, allowedThreads, stride=2)
+        #self.addReluLayer()
+        self.addConvLayer(np.random.rand(4, 5, 5, 8)*2 - 1, learningRate, allowedThreads)#, stride=2)
         self.addReluLayer()
-        self.addConvLayer(np.random.rand(4, 7, 7, 8)*2 - 1, learningRate, allowedThreads, stride=2)
-        self.addReluLayer()
-        self.addConvLayer(np.random.rand(2, 7, 7, 4)*2 - 1, learningRate, allowedThreads, stride=2)
+        self.addPoolingLayer()
+
+        self.addConvLayer(np.random.rand(2, 5, 5, 4)*2 - 1, learningRate, allowedThreads)#, stride=2)
         self.addReluLayer()
         # TODO: express the size of the layer w.r.t. convolution stride size
         # instead of hard coding it
-        self.addFullyConnectedLayer(np.random.rand(128)*2-1, learningRate)
+        self.addFullyConnectedLayer(np.random.rand(968)*2-1, learningRate)
 
 
     def dump_model(self, filename):
