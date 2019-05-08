@@ -39,9 +39,9 @@ if __name__ == "__main__":
             #print("TYPE: ", type)
             pred = round(discr.predict(pic))
             error = discr.train(type)
-            print("\rImage {}/{} : {}. Error : {}".format(i, len(training_set), "Correct" if type == pred else "Failed", error))
+            print("\rImage {}/{} : {} (exp. {}; pred. {}) Error : {}".format(i, len(training_set), "Correct" if type == pred else "Failed", type, pred, error))
             print("Training {:.2%} complete.".format(i/len(training_set)), end='')
-    print("\rTraining complete")
+    print()
 
     discr.unsetLearning()
     # FN, FP, TN, TP
@@ -54,6 +54,6 @@ if __name__ == "__main__":
             pred = round(discr.predict(pic))
             scores[pred == type][type] += 1
         print("\rValidation {:.2%} complete".format(i/len(validation_set)), end='')
-    print("\rValidation complete")
+    print()
     print(scores)
     discr.dump_model("test{}.pickle".format(int(learningRate*1000)))

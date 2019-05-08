@@ -24,9 +24,19 @@ def loadImage(filename):
     finally:
         return valid, img
 
+def generateWeights(inSize):
+    return np.random.rand(inSize) * np.sqrt(1/inSize)
+
+def generateFilters(nfilter, nline, ncol, nchan=CHANNEL_NUM):
+    size = nline * ncol * nchan
+    return (np.random.rand(nfilter, nline, ncol, nchan) *2 -1)# * np.sqrt(1/size)
+
 def normalize(pic):
     pic -= np.mean(pic, axis=(0,1))
-    return pic / np.std(pic, axis=(0,1))
+    pic /= np.std(pic, axis=(0,1))
+    pic += 1 # testing
+    pic /= 2 # testing
+    return pic
 
 
 def sigmoid(value, derivative=False):
