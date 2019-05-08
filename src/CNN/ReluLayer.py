@@ -12,7 +12,7 @@ class ReluLayer(Layer):
         # relu is a simple function keeping positive values in a tensor,
         # and changing the negative ones to zero.
         self.saveData(tensor)
-        return reLu(tensor)
+        return np.where(tensor > 0, tensor, 0)
 
     def learn(self, loss):
         """
