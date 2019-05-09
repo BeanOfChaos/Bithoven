@@ -5,7 +5,7 @@ import CNN.utils as utils
 
 class FullyConnectedLayer(Layer):
 
-    def __init__(self, weights, learningRate, act_f=utils.sigmoid, isLearning=True):
+    def __init__(self, weights, learningRate, act_f=utils.reLu, isLearning=True):
         super(FullyConnectedLayer, self).__init__(isLearning)
         self._act_f = act_f  # activation function
         self._weights = weights
@@ -29,24 +29,19 @@ class FullyConnectedLayer(Layer):
     @staticmethod
     def learnFullyConnected(loss, previousLayer, alpha, weights, learningRate, act_f):
         """
-        previousLayer : values of the nodes from the previous layer
-        alpha : sum(xi * wi) -> used for derivation
-        weights : weights vector
+        previousLayer : input value received at last forward pass
+        alpha : output value at last forward pass, before activation
+        weights : weights matrix
         """
         df = act_f(alpha, derivative=True)
-        try:
-            # contains the loss of the previous layer
-            previousLayerLoss = np.zeros(previousLayer.shape)
-            # will be used to compute the updated weights
-            weightsCorrection = np.zeros(weights.shape)
-            for i in range(loss.shape[0]):
-                weightsCorrection[i] = previousLayer[i] * df[i] * loss[i]
-                previousLayerLoss[i] = weights[i] * df[i] * loss[i]
-            weights -= learningRate * weightsCorrection
-        except IndexError:
-            weightsCorrection = previousLayer * df * loss
-            previousLayerLoss = weights * df * loss
-            weights -= learningRate * weightsCorrection
+        # contains the loss of the previous layer
+        previousLayerLoss = np.zeros(previousLayer.shape)
+        # will be used to compute the updated weights
+        weightsCorrection = np.zeros(weights.shape)
+        for i in range(loss.shape[0]):
+            weightsCorrection[i] = previousLayer[i] * df[i] * loss[i]
+            previousLayerLoss[i] = weights[i] * df[i] * loss[i]
+        weights -= learningRate * weightsCorrection
 
         return previousLayerLoss, weights
 
@@ -55,9 +50,9 @@ class FullyConnectedLayer(Layer):
         basic computation function, calls the main function
         """
         vector = tensor.flatten()
-        node, res = FullyConnectedLayer.connect(vector, self._weights, self._act_f)
+        alpha, res = FullyConnectedLayer.connect(vector, self._weights, self._act_f)
         # saves last input and intermediate results
-        self.saveData((tensor, node))
+        self.saveData((tensor, alpha))
         return res
 
     def learn(self, loss):
