@@ -16,8 +16,8 @@ class FullyConnectedLayer(Layer):
         """
         Does the dot product between the input vector and the filter.
         Vector is a   1 x n array
-        Filter is a   n x 1 array
-        result is a   1 x 1 array for the two nodes of the fully connected layer.
+        Filter is a   n x m array
+        result is a   1 x m array for the two nodes of the fully connected layer.
         """
         node = np.dot(vector, weights)
         result = act_f(node)
@@ -33,20 +33,20 @@ class FullyConnectedLayer(Layer):
         alpha : sum(xi * wi) -> used for derivation
         weights : weights vector
         """
-        # contains the loss of the previous layer
-        previousLayerLoss = np.zeros(previousLayer.shape)
-        # will be used to compute the updated weights
-        weightsCorrection = np.zeros(weights.shape)
-        """
-        for i in range(weights.shape[0]):  # for i along the height
-            df = act_f(alpha, derivative=True)
-            weightsCorrection[i] = loss * previousLayer[i] * df
-            previousLayerLoss[i] = loss * weights[i] * df
-        """
         df = act_f(alpha, derivative=True)
-        weightsCorrection = previousLayer * df * loss
-        previousLayerLoss = weights * df * loss
-        weights -= learningRate * weightsCorrection
+        try:
+            # contains the loss of the previous layer
+            previousLayerLoss = np.zeros(previousLayer.shape)
+            # will be used to compute the updated weights
+            weightsCorrection = np.zeros(weights.shape)
+            for i in range(loss.shape[0]):
+                weightsCorrection[i] = previousLayer[i] * df[i] * loss[i]
+                previousLayerLoss[i] = weights[i] * df[i] * loss[i]
+            weights -= learningRate * weightsCorrection
+        except IndexError:
+            weightsCorrection = previousLayer * df * loss
+            previousLayerLoss = weights * df * loss
+            weights -= learningRate * weightsCorrection
 
         return previousLayerLoss, weights
 

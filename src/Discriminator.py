@@ -33,7 +33,8 @@ class Discriminator(CNN):
         self.addPoolingLayer()
         # TODO: express the size of the layer w.r.t. convolution stride size
         # instead of hard coding it
-        self.addFullyConnectedLayer(generateWeights(242), learningRate)
+        self.addFullyConnectedLayer(generateWeights(242, 242), learningRate)
+        self.addFullyConnectedLayer(generateWeights(242, 1), learningRate)
 
 
     def dump_model(self, filename):

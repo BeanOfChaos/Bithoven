@@ -1,6 +1,5 @@
 import numpy as np
 from PIL import Image
-import os
 
 
 LEARNING_RATE = 0.01
@@ -11,31 +10,30 @@ IMG_SIZE = (256, 256)
 def loadImage(filename):
     valid, img = True, None
     try:
-        img = Image.open(filename)
+        img = Image.open(filename).convert('L')
         img.verify()
     except Exception as e:
         valid = False
-        #os.remove(filename)
     else:
         img = np.array(Image.open(filename).resize(IMG_SIZE), dtype="float64")
         if img.shape != (IMG_SIZE[0], IMG_SIZE[1], CHANNEL_NUM):
             valid = False
-            #os.remove(filename)
     finally:
         return valid, img
 
-def generateWeights(inSize):
-    return np.random.rand(inSize) * np.sqrt(1/inSize)
+
+def generateWeights(inSize, outSize):
+    return np.random.rand(inSize, outSize) * np.sqrt(1/inSize)
+
 
 def generateFilters(nfilter, nline, ncol, nchan=CHANNEL_NUM):
-    size = nline * ncol * nchan
-    return (np.random.rand(nfilter, nline, ncol, nchan) *2 -1)# * np.sqrt(1/size)
+    # size = nline * ncol * nchan
+    return (np.random.rand(nfilter, nline, ncol, nchan) *2 -1) #  * np.sqrt(1/size)
+
 
 def normalize(pic):
-    pic -= np.mean(pic, axis=(0,1))
-    pic /= np.std(pic, axis=(0,1))
-    pic += 1 # testing
-    pic /= 2 # testing
+    pic -= np.mean(pic)
+    pic /= np.std(pic)
     return pic
 
 

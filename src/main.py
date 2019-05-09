@@ -9,6 +9,7 @@ from CNN.utils import loadImage, normalize, LEARNING_RATE
 
 
 if __name__ == "__main__":
+
     learningRate = LEARNING_RATE
     allowedThreads = None
     if len(sys.argv) > 1:
@@ -30,20 +31,20 @@ if __name__ == "__main__":
     training_set, validation_set = dataset[x:], dataset[:x]
 
     for i, (type, filename) in enumerate(training_set, 1):
-        #print("---------------------------")
-        #print("image : ", filename)
         valid, pic = loadImage(filename)
         if valid:
             # normalize data
             pic = normalize(pic)
-            #print("TYPE: ", type)
-            pred = round(discr.predict(pic))
+            pred = discr.predict(pic)
+            print(pred.shape)
+            pred = np.round(pred)
             error = discr.train(type)
             print("\rImage {}/{} : {} (exp. {}; pred. {}) Error : {}".format(i, len(training_set), "Correct" if type == pred else "Failed", type, pred, error))
             print("Training {:.2%} complete.".format(i/len(training_set)), end='')
     print()
 
     discr.unsetLearning()
+
     # FN, FP, TN, TP
     scores = [[0, 0], [0, 0]]
     for i, (type, filename) in enumerate(validation_set, 1):
