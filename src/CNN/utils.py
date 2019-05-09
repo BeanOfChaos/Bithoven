@@ -10,7 +10,7 @@ IMG_SIZE = (256, 256)
 def loadImage(filename):
     valid, img = True, None
     try:
-        img = Image.open(filename).convert('L')
+        img = Image.open(filename)
         img.verify()
     except Exception as e:
         valid = False

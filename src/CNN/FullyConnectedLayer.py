@@ -34,13 +34,9 @@ class FullyConnectedLayer(Layer):
         weights : weights matrix
         """
         df = act_f(alpha, derivative=True)
-        # contains the loss of the previous layer
-        previousLayerLoss = np.zeros(previousLayer.shape)
-        # will be used to compute the updated weights
-        weightsCorrection = np.zeros(weights.shape)
-        for i in range(loss.shape[0]):
-            weightsCorrection[i] = previousLayer[i] * df[i] * loss[i]
-            previousLayerLoss[i] = weights[i] * df[i] * loss[i]
+
+        weightsCorrection = np.matmul(previousLayer, df * loss)
+        previousLayerLoss = np.matmul(weights, df * loss)
         weights -= learningRate * weightsCorrection
 
         return previousLayerLoss, weights
