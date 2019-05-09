@@ -46,7 +46,6 @@ class FullyConnectedLayer(Layer):
         """
         vector = tensor.reshape(1, -1)
         alpha, res = FullyConnectedLayer.connect(vector, self._weights, self._act_f)
-        node, res = FullyConnectedLayer.connect(vector, self._weights, self._act_f)
         # saves last input and intermediate results
         self.saveData((tensor, alpha))
         return res
