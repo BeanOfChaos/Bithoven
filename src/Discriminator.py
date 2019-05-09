@@ -1,8 +1,7 @@
 from CNN.CNN import CNN
-from CNN.utils import generateFilters, generateWeights
+from CNN.utils import generateFilters, generateWeights, sigmoid
 import numpy as np
 import pickle
-
 
 
 class Discriminator(CNN):
@@ -34,7 +33,7 @@ class Discriminator(CNN):
         # TODO: express the size of the layer w.r.t. convolution stride size
         # instead of hard coding it
         self.addFullyConnectedLayer(generateWeights(242, 242), learningRate)
-        self.addFullyConnectedLayer(generateWeights(242, 1), learningRate)
+        self.addFullyConnectedLayer(generateWeights(242, 1), learningRate, act_f=sigmoid)
 
 
     def dump_model(self, filename):

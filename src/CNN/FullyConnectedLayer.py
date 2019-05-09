@@ -5,7 +5,7 @@ import CNN.utils as utils
 
 class FullyConnectedLayer(Layer):
 
-    def __init__(self, weights, learningRate, act_f=utils.reLu, isLearning=True):
+    def __init__(self, weights, learningRate, act_f, isLearning=True):
         super(FullyConnectedLayer, self).__init__(isLearning)
         self._act_f = act_f  # activation function
         self._weights = weights

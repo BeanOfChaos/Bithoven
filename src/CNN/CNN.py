@@ -3,7 +3,7 @@ from CNN.ReluLayer import ReluLayer
 from CNN.MaxPoolingLayer import MaxPoolingLayer
 from CNN.FullyConnectedLayer import FullyConnectedLayer
 import numpy as np
-
+from CNN.utils import reLu
 
 """
     Input format :
@@ -71,8 +71,8 @@ class CNN:
     def addPoolingLayer(self, partitionSize=2):
         self._layers.append(MaxPoolingLayer(partitionSize, self._isLearning))
 
-    def addFullyConnectedLayer(self, filters, learningRate):
-        self._layers.append(FullyConnectedLayer(filters, learningRate))
+    def addFullyConnectedLayer(self, filters, learningRate, act_f=reLu):
+        self._layers.append(FullyConnectedLayer(filters, learningRate, act_f))
 
     def setLearning(self):
         self._isLearning = True
