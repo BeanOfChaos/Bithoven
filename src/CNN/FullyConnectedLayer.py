@@ -15,9 +15,9 @@ class FullyConnectedLayer(Layer):
     def connect(vector, weights, act_f):
         """
         Does the dot product between the input vector and the filter.
-        Vector is a   1 x n array
-        Filter is a   n x m array
-        result is a   1 x m array for the two nodes of the fully connected layer.
+        input vector is a   1 x k vector
+        weights are         k x m matrix
+        result is a         1 x m array
         """
         node = np.dot(vector, weights)
         result = act_f(node)
@@ -31,10 +31,9 @@ class FullyConnectedLayer(Layer):
         """
         previousLayer : input value received at last forward pass
         alpha : output value at last forward pass, before activation
-        weights : weights matrix
+        weights : current weights matrix
         """
         df = act_f(alpha, derivative=True)
-
         weightsCorrection = np.matmul(previousLayer, df * loss)
         previousLayerLoss = np.matmul(weights, df * loss)
         weights -= learningRate * weightsCorrection
