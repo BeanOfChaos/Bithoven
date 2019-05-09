@@ -36,9 +36,9 @@ if __name__ == "__main__":
             # normalize data
             pic = normalize(pic)
             pred = discr.predict(pic)
-            print(pred.shape)
             pred = np.round(pred)
             error = discr.train(type)
+            pred = pred[0]
             print("\rImage {}/{} : {} (exp. {}; pred. {}) Error : {}".format(i, len(training_set), "Correct" if type == pred else "Failed", type, pred, error))
             print("Training {:.2%} complete.".format(i/len(training_set)), end='')
     print()
