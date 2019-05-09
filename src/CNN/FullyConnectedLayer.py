@@ -35,8 +35,8 @@ class FullyConnectedLayer(Layer):
         """
         df = act_f(alpha, derivative=True)
 
-        weightsCorrection = np.matmul(previousLayer, df * loss)
-        previousLayerLoss = np.matmul(weights, df * loss)
+        weightsCorrection = np.matmul(previousLayer.reshape(-1, 1), df * loss)
+        previousLayerLoss = np.matmul(weights, (df * loss).reshape(-1, 1))
         weights -= learningRate * weightsCorrection
 
         return previousLayerLoss, weights
@@ -45,7 +45,7 @@ class FullyConnectedLayer(Layer):
         """
         basic computation function, calls the main function
         """
-        vector = tensor.flatten()
+        vector = tensor.reshape(1, -1)
         node, res = FullyConnectedLayer.connect(vector, self._weights, self._act_f)
         # saves last input and intermediate results
         self.saveData((tensor, node))
@@ -56,5 +56,5 @@ class FullyConnectedLayer(Layer):
         basic learning method, sets some parameters and calls the main function
         """
         previousLayer, alpha = self.getSavedData()
-        previousLayerLoss, self._weights = FullyConnectedLayer.learnFullyConnected(loss, previousLayer.flatten(), alpha, self._weights, self._learningRate, self._act_f)
+        previousLayerLoss, self._weights = FullyConnectedLayer.learnFullyConnected(loss, previousLayer, alpha, self._weights, self._learningRate, self._act_f)
         return previousLayerLoss.reshape(previousLayer.shape)
