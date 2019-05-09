@@ -2,6 +2,7 @@ from CNN.ConvolutionLayer import ConvolutionLayer
 from CNN.ReluLayer import ReluLayer
 from CNN.MaxPoolingLayer import MaxPoolingLayer
 from CNN.FullyConnectedLayer import FullyConnectedLayer
+import numpy as np
 
 
 """
@@ -40,9 +41,10 @@ class CNN:
         currentTensor = inputTensor
         for layer in self._layers:
             currentTensor = layer.compute(currentTensor)
+        res = currentTensor[0,0]
         if self._isLearning:
-            self._output = currentTensor
-        return currentTensor
+            self._output = res
+        return res
 
     def train(self, expected):
         """
@@ -50,7 +52,8 @@ class CNN:
             uses back prop to update the parameters (filters, weights) of the network.
         """
         if self._isLearning:
-            error = currentLoss = self._output - expected
+            error = self._output - expected
+            currentLoss = np.array([[error]])
             for i in range(len(self._layers)-1, -1, -1):
                 currentLoss = self._layers[i].learn(currentLoss)
             return error
