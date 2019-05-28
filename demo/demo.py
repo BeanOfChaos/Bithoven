@@ -5,16 +5,16 @@ import numpy as np
 from PIL import Image
 from math import ceil
 
+from keras.models import load_model
 from keras.preprocessing.image import load_img, img_to_array
 
 
 classes = ["Dog", "Cat"]
-modelfile = "history.pickle"
+modelfile = "mypretty.model"
 
 
 if __name__ == "__main__":
-    with open(modelfile, "rb") as f:
-        model = p.load(f).model
+    model = load_model(modelfile)
 
     demo_pics = list(filter(lambda x: x.endswith(".png") or x.endswith(".jpeg") or x.endswith(".jpg"), os.listdir(".")))
 
