@@ -9,7 +9,7 @@ from keras.models import load_model
 from keras.preprocessing.image import load_img, img_to_array
 
 
-classes = ["Dog", "Cat"]
+classes = ["Cat", "Dog"]
 modelfile = "mypretty.model"
 
 
@@ -24,10 +24,12 @@ if __name__ == "__main__":
         subplt = axarr[i]
 
         pic = Image.open(filename)
-        npic = img_to_array(load_img(filename, color_mode = 'grayscale', target_size=(256,256)))
+        npic = img_to_array(load_img(filename, color_mode='grayscale', target_size=(256,256)))
+        npic -= np.mean(npic)
+        npic /= np.std(npic)
         npic = npic.reshape([1, 256, 256, 1])
         subplt.imshow(pic)
-        pred = model.predict(npic)[0][0]
+        pred = model.predict_classes(npic)[0][0]
         print(pred, classes[int(round(pred))])
         subplt.set_title(classes[int(round(pred))])
         subplt.axis('off')
