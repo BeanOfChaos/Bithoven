@@ -26,32 +26,32 @@ def loadData(data_paths, test_prop=0.1):
 if __name__ == "__main__":
     model = Sequential()
 
-    model.add(Conv2D(16, 3, 3, border_mode='same', input_shape=(256, 256, 1), activation='relu'))
-    model.add(Conv2D(16, 3, 3, border_mode='same', activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(BatchNormalization())
-
-    model.add(Conv2D(32, 3, 3, border_mode='same', activation='relu'))
+    model.add(Conv2D(32, 3, 3, border_mode='same', input_shape=(256, 256, 1), activation='relu'))
     model.add(Conv2D(32, 3, 3, border_mode='same', activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(BatchNormalization())
 
     model.add(Conv2D(64, 3, 3, border_mode='same', activation='relu'))
     model.add(Conv2D(64, 3, 3, border_mode='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(BatchNormalization())
+
+    model.add(Conv2D(128, 3, 3, border_mode='same', activation='relu'))
+    model.add(Conv2D(128, 3, 3, border_mode='same', activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(BatchNormalization())
 
     model.add(Flatten())
-    model.add(Dense(128, activation='relu'))
+    model.add(Dense(256, activation='relu'))
     model.add(BatchNormalization())
 
-    model.add(Dense(128, activation='relu'))
+    model.add(Dense(256, activation='relu'))
     model.add(BatchNormalization())
 
     model.add(Dense(1))
     model.add(Activation('sigmoid'))
 
-    sgd = SGD(lr=0.01, clipnorm=1.)
+    sgd = SGD(lr=0.1, clipnorm=1.)
     model.compile(loss='mean_squared_error',
                   optimizer=sgd,
                   metrics=['accuracy'])
