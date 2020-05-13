@@ -2,30 +2,35 @@ import os
 from random import shuffle
 import pickle
 
+import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation, Conv2D, MaxPooling2D, Flatten, BatchNormalization
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 DATAPATHS = ["./PetImages/Dog/", "./PetImages/Cat/"]
-BATCH_SIZE = 100
+BATCH_SIZE = 1024
 
 
 if __name__ == "__main__":
     model = Sequential()
 
-    model.add(Conv2D(16, 3, input_shape=(256, 256, 1)))
-    model.add(Conv2D(16, 3))
+    model.add(Conv2D(16, 3, activation='relu', input_shape=(256, 256, 1)))
+    model.add(Conv2D(16, 3, activation='relu'))
     model.add(MaxPooling2D(pool_size=(3, 3)))
     model.add(BatchNormalization())
 
-    model.add(Conv2D(32, 3))
-    model.add(Conv2D(32, 3))
+    model.add(Conv2D(32, 3, activation='relu'))
+    model.add(Conv2D(32, 3, activation='relu'))
     model.add(MaxPooling2D(pool_size=(3, 3)))
     model.add(BatchNormalization())
 
-    model.add(Conv2D(64, 3))
-    model.add(Conv2D(64, 3))
+    model.add(Conv2D(64, 3, activation='relu'))
+    model.add(MaxPooling2D(pool_size=(3, 3)))
+    model.add(BatchNormalization())
+
+    model.add(Conv2D(64, 3, activation='relu'))
+    model.add(Conv2D(64, 3, activation='relu'))
     model.add(MaxPooling2D(pool_size=(3, 3)))
     model.add(BatchNormalization())
 
@@ -34,12 +39,12 @@ if __name__ == "__main__":
     model.add(BatchNormalization())
 
     model.add(Dense(2))
-    model.add(Activation('sigmoid'))
+    model.add(Activation('softmax'))
 
     adam = Adam(lr=0.001)
-    model.compile(loss='mean_squared_error',
+    model.compile(loss='categorical_crossentropy',
                   optimizer=adam,
-                  metrics=['accuracy'])
+                  metrics=['accuracy', tf.keras.metrics.AUC(name='auc')])
     model.summary()
     datagen = ImageDataGenerator(
         featurewise_center=False,  # set input mean to 0 over the dataset
@@ -70,7 +75,7 @@ if __name__ == "__main__":
 
     histoly = model.fit_generator(train_generator,
                                   # steps_per_epoch=249,
-                                  epochs=2,
+                                  epochs=3,
                                   workers=2,
                                   use_multiprocessing=False)
 
